@@ -1,4 +1,4 @@
-stage:
+stages:
   - lint
   - typecheck
   - audit
