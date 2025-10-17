@@ -48,3 +48,4 @@ security-audit:
   script:
     - python -m uv export -f requirements.txt --without-hashes -o $env:TEMP\req.txt
     - python -m pip_audit -r $env:TEMP\req.txt
+    - python -m uv run --with dev mypy src -- --ignore-missing-imports
