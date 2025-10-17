@@ -1,34 +1,32 @@
-stages: [lint, typecheck, test, audit]
-
 # Lint
 lint:
   stage: lint
   image: $CI_REGISTRY_IMAGE:ci-latest
   script:
-    - poetry install --no-root  # installe uniquement les dépendances
-    - poetry run ruff check .
-    - poetry run ruff format --check .
+    - uv install --no-root
+    - uv ruff check .
+    - uv ruff format --check .
 
 # Type checking
 typecheck:
   stage: typecheck
   image: $CI_REGISTRY_IMAGE:ci-latest
   script:
-    - poetry install --no-root
-    - poetry run mypy src
+    - uv install --no-root
+    - uv mypy src
 
 # Tests unitaires
 pytest:
   stage: test
   image: $CI_REGISTRY_IMAGE:ci-latest
   script:
-    - poetry install --no-root
-    - poetry run pytest
+    - uv install --no-root
+    - uv pytest
 
 # Audit de sécurité
 security-audit:
   stage: audit
   image: $CI_REGISTRY_IMAGE:ci-latest
   script:
-    - poetry export -f requirements.txt --without-hashes -o /tmp/req.txt
-    - poetry run pip-audit -r /tmp/req.txt
+    - uv export -f requirements.txt --without-hashes -o /tmp/req.txt
+    - uv pip-audit -r /tmp/req.txt
