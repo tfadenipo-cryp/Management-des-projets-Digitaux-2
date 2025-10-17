@@ -8,9 +8,7 @@ stages:
 lint:
   stage: lint
   before_script:
-    # On ajoute Python au PATH manuellement (adapter si besoin)
     - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
-    - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Scripts;"
     - python --version
     - python -m pip install --upgrade pip
     - python -m pip install uv
@@ -25,7 +23,7 @@ typecheck:
     - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
     - python -m pip install uv
   script:
-    - python -m uv install --no-root
+    - python -m uv pip install --no-root
     - python -m uv run mypy src
 
 # Tests unitaires
@@ -35,7 +33,7 @@ pytest:
     - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
     - python -m pip install uv
   script:
-    - python -m uv install --no-root
+    - python -m uv pip install --no-root
     - python -m uv run pytest
 
 # Audit de sécurité
