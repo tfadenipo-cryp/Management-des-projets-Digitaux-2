@@ -9,12 +9,14 @@ lint:
   stage: lint
   image: python:3.13-slim
   before_script:
-    - python -m pip install --upgrade pip
-    - pip install uv
-    - uv sync --frozen
+  - $env:Path = "$env:Path;C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Scripts\;C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\"
+  - python -m pip install --upgrade pip
+  - pip install uv
+  - uv sync --frozen
+
   script:
-    - $env:Path = "$env:Path;C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Scripts\"
-    - uv run ruff check
+  - uv run ruff check
+    
 
 
 # Type checking
