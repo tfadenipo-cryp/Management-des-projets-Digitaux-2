@@ -1,0 +1,19 @@
+import pandas as pd
+import streamlit as st
+import plotly.express as px
+
+
+def main_streamlit():
+#On lit la base (chemin à changer pour que tout le monde puisse charger la base de données)
+    data = pd.read_csv("C:/Users/arvoi/Desktop/cours/management_digit/data/Motor vehicle insurance data.csv", sep = ";")
+
+    st.title("Analyse des premières variables")
+
+    choix = st.selectbox("Choisis une variable :", data.columns)
+    st.plotly_chart(px.histogram(data, x=choix))
+#la j'ai mis des graphiques selon ce qu'on veut
+
+# pour faire tourner la code il faut écrire dans le terminal python : "streamlit run [chemin du fichier].py"
+
+
+

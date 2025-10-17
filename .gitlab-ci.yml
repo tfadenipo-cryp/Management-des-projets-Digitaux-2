@@ -1,0 +1,46 @@
+stages: [build, lint, typecheck, test, bdd, audit]
+
+build-image:
+  stage: build
+  image: docker:27
+  services: [docker:27-dind]
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:ci-latest
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:ci-latest
+
+lint:
+  stage: lint
+  image: $CI_REGISTRY_IMAGE:ci-latest
+  script:
+    - poetry run ruff check .
+    - poetry run ruff format --check .
+
+typecheck:
+  stage: typecheck
+  image: $CI_REGISTRY_IMAGE:ci-latest
+  script:
+    - poetry run mypy src
+
+pytest:
+  stage: test
+  image: $CI_REGISTRY_IMAGE:ci-latest
+  script:
+    - poetry run pytest
+
+behave:
+  stage: bdd
+  image: $CI_REGISTRY_IMAGE:ci-latest
+  script:
+    - poetry run behave
+
+security-audit:
+  stage: audit
+  image: $CI_REGISTRY_IMAGE:ci-latest
+  script:
+    - poetry export -f requirements.txt --without-hashes -o /tmp/req.txt
+    - poetry run pip-audit -r /tmp/req.txt
