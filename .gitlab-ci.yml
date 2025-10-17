@@ -1,11 +1,19 @@
+stage:
+  - lint
+  - typecheck
+  - audit
+  - test
+
 # Lint
 lint:
   stage: lint
   image: $CI_REGISTRY_IMAGE:ci-latest
   script:
-    - uv install --no-root
-    - uv ruff check .
-    - uv ruff format --check .
+    - pip install --upgrade pip
+    - pip install uv
+    - uv sync --frozen
+    - uv run ruff check
+
 
 # Type checking
 typecheck:
