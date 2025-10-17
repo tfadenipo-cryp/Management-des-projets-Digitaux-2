@@ -16,15 +16,17 @@ lint:
   script:
     - python -m uv run ruff check
 
+
 # Type checking
 typecheck:
   stage: typecheck
   before_script:
     - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
     - python -m pip install uv
+    - python -m uv sync --frozen
   script:
-    - python -m uv pip install
     - python -m uv run mypy src
+
 
 # Tests unitaires
 pytest:
@@ -32,9 +34,10 @@ pytest:
   before_script:
     - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
     - python -m pip install uv
+    - python -m uv sync --frozen
   script:
-    - python -m uv pip install
     - python -m uv run pytest
+
 
 # Audit de sécurité
 security-audit:
