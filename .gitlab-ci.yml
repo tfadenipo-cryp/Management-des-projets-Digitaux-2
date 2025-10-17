@@ -7,40 +7,40 @@ stages:
 # Lint
 lint:
   stage: lint
-  image: python:3.13-slim
+  image: python:3.12-slim
   before_script:
-  - $env:Path = "$env:Path;
-      C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\;
-      C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Scripts\;
-      C:\Users\%USERNAME%\AppData\Roaming\Python\Python312\Scripts\"  - python -m pip install --upgrade pip
-  - python -m pip install uv
-  - python -m uv sync --frozen
-
+    - python -m pip install --upgrade pip
+    - pip install uv
+    - uv sync --frozen
   script:
-  - uv run ruff check
-    
-
+    - uv run ruff check
 
 # Type checking
 typecheck:
   stage: typecheck
-  image: python:3.13-slim
-  script: 
+  image: python:3.12-slim
+  before_script:
+    - pip install uv
+  script:
     - uv install --no-root
-    - uv mypy src
+    - uv run mypy src
 
 # Tests unitaires
 pytest:
   stage: test
-  image: python:3.13-slim
+  image: python:3.12-slim
+  before_script:
+    - pip install uv
   script:
     - uv install --no-root
-    - uv pytest
+    - uv run pytest
 
 # Audit de sécurité
 security-audit:
   stage: audit
-  image: python:3.13-slim
+  image: python:3.12-slim
+  before_script:
+    - pip install uv pip-audit
   script:
     - uv export -f requirements.txt --without-hashes -o /tmp/req.txt
-    - uv pip-audit -r /tmp/req.txt
+    - pip-audit -r /tmp/req.txt
