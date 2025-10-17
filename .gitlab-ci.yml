@@ -15,7 +15,7 @@ lint:
   - python -m uv sync --frozen
 
   script:
-  - uv run ruff check
+  - python uv run ruff check
     
 
 
