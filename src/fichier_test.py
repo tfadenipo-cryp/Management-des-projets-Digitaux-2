@@ -3,7 +3,7 @@ import streamlit as st
 import plotly.express as px
 
 #On lit la base (chemin à changer pour que tout le monde puisse charger la base de données)
-data = pd.read_csv("../data/processed/Motor_vehicle_insurance_data.csv", sep = ";")
+data = pd.read_csv("../data/raw/Motor_vehicle_insurance_data.csv", sep = ";")
 
 st.title("Analyse des premières variables")
 
