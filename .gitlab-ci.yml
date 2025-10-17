@@ -15,7 +15,7 @@ lint:
   - python -m uv sync --frozen
 
   script:
-  - python uv run ruff check
+  - uv run ruff check
     
 
 
@@ -23,7 +23,7 @@ lint:
 typecheck:
   stage: typecheck
   image: python:3.13-slim
-  script:
+  script: 
     - uv install --no-root
     - uv mypy src
 
