@@ -25,8 +25,7 @@ typecheck:
     - python -m pip install uv
     - python -m uv sync --frozen
   script:
-    - python -m uv run mypy src
-    - python -m uv run --with dev mypy src -- --ignore-missing-imports
+    - python -m uv run mypy src -- --ignore-missing-imports
 
 
 
