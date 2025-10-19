@@ -3,7 +3,6 @@ stages:
   - typecheck
   - audit
   - test
-  - deploy
 # Lint
 lint:
   stage: lint
@@ -46,12 +45,3 @@ security-audit:
     # Génère un requirements.txt standard dans le dossier temporaire
     - python -m pip freeze > $env:TEMP\req.txt
     - python -m pip_audit -r $env:TEMP\req.txt
-
-# Push mirror 
-push_to_github:
-  stage: deploy
-  script:
-    - git remote set-url origin https://$GITHUB_TOKEN@github.com/$GITHUB_USERNAME/-Management-des-projets-Digitaux-2.git
-    - git push --mirror
-  only:
-    - main
