@@ -3,7 +3,7 @@ stages:
   - typecheck
   - audit
   - test
-  - push_to_github
+  - deploy
 # Lint
 lint:
   stage: lint
