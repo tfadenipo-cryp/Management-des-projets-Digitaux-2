@@ -51,9 +51,10 @@ security-audit:
 push_to_github:
   stage: deploy
   script:
-    - git remote set-url https://$MY_TOKEN@github.com/tfadenipo-cryp/-Management-des-projets-Digitaux-2.git
-    - git push --mirror 
+    - git remote set-url https://$GITHUB_TOKEN@github.com/$GITHUB_USERNAME/-Management-des-projets-Digitaux-2.git
+    - git push --mirror
   only:
-  - main #que la branche main
+    - main
   secrets:
-    MY_TOKEN: $GITHUB_TOKEN
+    GITHUB_TOKEN:
+      vault: GITHUB_TOKEN
