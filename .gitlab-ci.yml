@@ -55,6 +55,3 @@ push_to_github:
     - git push --mirror
   only:
     - main
-  secrets:
-    GITHUB_TOKEN:
-      vault: GITHUB_TOKEN
