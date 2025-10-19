@@ -51,7 +51,7 @@ security-audit:
 push_to_github:
   stage: deploy
   script:
-    - git remote set-url https://$GITHUB_TOKEN@github.com/$GITHUB_USERNAME/-Management-des-projets-Digitaux-2.git
+    - git remote set-url origin https://$GITHUB_TOKEN@github.com/$GITHUB_USERNAME/-Management-des-projets-Digitaux-2.git
     - git push --mirror
   only:
     - main
