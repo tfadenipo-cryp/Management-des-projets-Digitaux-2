@@ -1,49 +1,84 @@
+
 # Car Insurance Analysis Application
 
 
-
 ## Description
+This project is part of the Management of Digital Projects 2 course.
+It consists of creating an interactive Python application using Streamlit
 
-This project is part of Management of Digital Projects 2 course. It consists of creating an interactive Python application using Streamlit to explore and analyze a car insurance dataset.
+
+to explore and analyze a car insurance dataset.
+
+## Features
+
+- Dataset: Motor Vehicle Insurance Data
+- Features: interactive visualizations, filtering, basic statistical analysis
+- Deployment: automated CI/CD with Docker
+
+## Variable Definitions
+
+...
+
+## Installation and Usage
+
+### Method 1 : With Docker
+
+1. **Install Docker Desktop**  
+   Download and install from [www.docker.com](https://www.docker.com) and make sure Docker is running.
+
+2. **Clone the repository**  
+   ```bash
+   git clone https://gitlab-mi.univ-reims.fr/fade0003/management-des-projets-digitaux-2.git
+
+    ```
+3. **Navigate to the project directory**
+    ```bash
+    cd management-des-projets-digitaux-2
+    ```
 
 
-Dataset: Motor Vehicle Insurance Data
+4. **Build and run the app**
+    ```bash
+    docker-compose -f docker-compose.yaml up -d --build
+    ```
+5. **Launch the app inside the container**
+    ```bash
+    docker exec -it <container_name> uv run streamlit run main.py
 
-Features: interactive visualizations, filtering, basic statistical analysis
+    ```
+#### Replace <container_name> with the actual container name (check with docker ps).
 
-Deployment: automated CI/CD with Docker
 
-## Installation
+### Method 2 : Using Python and uv
 
-### Clone the repository:
+1. **Install Python 3.13**
+    Download and install from [Python.org](https://www.python.org/)
 
-git clone https://gitlab-mi.univ-reims.fr/fade0003/management-des-projets-digitaux-2.git
-cd management-des-projets-digitaux-2
+2. **Install uv**
+    Follow instructions at uv docs : https://docs.astral.sh/ub
 
-### Create a python vitrual environment :
-python -m venv .venv
+3. **Clone the repository**
+    ```bash
+    git clone https://gitlab-mi.univ-reims.fr/fade0003/management-des-projets-digitaux-2.git
+    ```
 
-### Activate the environment :
-Windows :
-.venv\Scripts\activate
-MacOs/Linux :
-source .venv/bin/activate
+4. **Navigate to the project directory**
+    ```bash
+    cd management-des-projets-digitaux-2    
+    ```
 
-### Install dependencies : 
-pip install -r requirements.txt
 
-## Run the Application 
+5. **Run the app**
 
-### With Streamlit :
-streamlit run src/main.py
+    ```bash
+    uv run streamlit run main.py
+    ```
 
-### With Docker :
 
-docker build -t mpd2-app .
-docker run -p 8501:8501 mpd2-app
 
-## Project Structure : 
+## Project Structure
 
+```text
 .
 ├── .venv/                  # Virtual environment
 ├── data/
@@ -59,38 +94,34 @@ docker run -p 8501:8501 mpd2-app
 │   └── test_example.py
 ├── .dockerignore
 ├── .editorconfig
-├── .gitingore
+├── .gitignore
 ├── .gitlab-ci.yml
-├──.python-version
+├── .python-version
 ├── Dockerfile
 ├── README.Docker.md
 ├── README.md
 ├── compose.yaml
 ├── pyproject.toml
 ├── requirements.txt
-├── uv.lock
+└── uv.lock
 
-
-
+```
 
 ## CI/CD
-
 The project uses GitLab CI/CD and Docker to automate:
-
-Dependency installation
-
-Unit tests execution
-
-Docker container build and deployment
-
-The pipeline is defined in .gitlab-ci.yml.
+- Dependency installation
+- Unit tests execution
+- Docker container build and deployment
+- Requires 'uv' for pipeline jobs
+The pipeline is defined in .gitlab-ci.yml
 
 
 ## Team Members
 
-Timothe Fadenipo : Owner
-Matthis Arvois : Maintainer
-Nikita Pomozov : Developer
-Rezi Sabashvilli : Developer
-Idriss Jordan : Developer 
-Cherfatou : Developer
+- Timothe Fadenipo: Owner
+- Matthis Arvois: Maintainer
+- Nikita Pomozov: Developer
+- Rezi Sabashvilli: Developer
+- Idriss Jordan: Developer
+- Cherfatou KOUDOU KIMBA: Developer
+
