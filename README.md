@@ -118,10 +118,10 @@ The pipeline is defined in .gitlab-ci.yml
 
 ## Team Members
 
-- Timothe Fadenipo: Owner
-- Matthis Arvois: Maintainer
-- Nikita Pomozov: Developer
-- Rezi Sabashvilli: Developer
-- Idriss Jordan: Developer
-- Cherfatou KOUDOU KIMBA: Developer
+- Timothe Fadenipo: Data Owner (Owner)
+- Matthis Arvois: Data Engineer (Maintainer)
+- Nikita Pomozov: Data Gouvernance (Developer)
+- Rezi Sabashvilli: Data Scientist (Developer)
+- Idriss Jordan: Interface Designer (Developer)
+- Cherfatou KOUDOU KIMBA: Data Analyst (Developer)
 
