@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
-from functions.utils.utils import display_results 
-from functions.logic.analysis_power_logic import calculate_avg_cost_by_power # <-- Import Logique
+from functions.utils import display_results 
+from functions.analysis_power_logic import calculate_avg_cost_by_power # <-- Import Logique
 
 # ======================================================================
 # FEATURE 1: SEARCH BY VEHICLE POWER 

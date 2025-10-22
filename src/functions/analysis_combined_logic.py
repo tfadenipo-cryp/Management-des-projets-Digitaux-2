@@ -10,7 +10,7 @@ from pathlib import Path
 
 # Assurez-vous que ce chemin est inclus pour les imports
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
-from functions.logic.analysis_combined_logic import calculate_avg_cost_combined 
+from functions.analysis_combined_logic import calculate_avg_cost_combined 
 
 class TestCombinedAnalysis(unittest.TestCase):
     """Teste la logique de calcul du coût moyen pour une combinaison Type ET Puissance."""

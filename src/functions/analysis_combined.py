@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from functions.utils import display_results
-from functions.logic.analysis_combined_logic import calculate_avg_cost_combined
+from functions.analysis_combined_logic import calculate_avg_cost_combined
 
 # ======================================================================
 # FEATURE 4: COMBINED SEARCH (Interface)

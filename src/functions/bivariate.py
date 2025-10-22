@@ -5,7 +5,7 @@ from datetime import datetime
 import numpy as np
 
 # Importe les fonctions de logique pure depuis le nouveau module bivariate_logic.py
-from functions.logic.bivariate_logic import (
+from functions.bivariate_logic import (
     prep_value_data,
     prep_age_data,
     prep_driver_age_data,
