@@ -1,5 +1,5 @@
-from functions.dashboard import main_streamlit
+from functions.main_app import run_dashboard
 
 
 if __name__ == "__main__":
-    main_streamlit()
+    run_dashboard()
