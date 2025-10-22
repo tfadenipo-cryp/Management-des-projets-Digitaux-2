@@ -9,14 +9,14 @@ stages:
   - test
 
 # ======================================================================
-# SETUP (Installe les dépendances et crée un artefact réutilisable)
+# SETUP (Installe les dépendances via python -m pip)
 # ======================================================================
 setup:
   stage: setup
   script:
-    # On doit forcer l'installation dans l'environnement Docker
-    - pip install uv pip-audit
-    - uv sync --frozen
+    # Utilisation de 'python -m pip' pour contourner le problème de PATH/PowerShell.
+    - python -m pip install uv pip-audit
+    - python -m uv sync --frozen
   artifacts:
     # Sauvegarde le dossier .venv et le lockfile pour les autres jobs
     paths:
@@ -30,10 +30,9 @@ setup:
 lint:
   stage: lint
   dependencies:
-    - setup # Récupère l'artefact .venv
+    - setup
   script:
-    # Exécute Ruff Check (vous devez d'abord l'exécuter localement avec --fix)
-    - uv run ruff check src/ --diff --exit-code
+    - python -m uv run ruff check src/ --diff --exit-code
 
 # ======================================================================
 # TYPE CHECKING (Mypy)
@@ -43,7 +42,7 @@ typecheck:
   dependencies:
     - setup
   script:
-    - uv run mypy src/ --ignore-missing-imports
+    - python -m uv run mypy src/ --ignore-missing-imports
 
 # ======================================================================
 # SECURITY AUDIT (pip-audit)
@@ -53,7 +52,7 @@ security-audit:
   dependencies:
     - setup
   script:
-    - pip-audit
+    - python -m pip-audit
 
 # ======================================================================
 # UNIT TESTS (Pytest)
@@ -63,4 +62,4 @@ pytest:
   dependencies:
     - setup
   script:
-    - uv run pytest tests/
+    - python -m uv run pytest tests/
