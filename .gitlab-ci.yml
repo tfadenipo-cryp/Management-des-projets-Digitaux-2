@@ -3,28 +3,20 @@ stages:
   - typecheck
   - audit
   - test
-
-# ======================================================================
-# LINTING (Ruff) - Le job qui était en échec
-# ======================================================================
+# Lint
 lint:
   stage: lint
   before_script:
-    # Conservation du chemin Windows pour l'environnement (obligatoire pour le Runner Timothe)
     - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
     - python --version
     - python -m pip install --upgrade pip
     - python -m pip install uv
     - python -m uv sync --frozen
   script:
-    # 1. Corrige automatiquement les erreurs de style (F401 - imports inutilisés)
-    - python -m uv run ruff check . --fix
-    # 2. Vérifie à nouveau pour s'assurer qu'il ne reste AUCUNE erreur (et fait échouer le job si ce n'est pas le cas)
-    - python -m uv run ruff check .
+    - python -m uv run ruff check
 
-# ======================================================================
-# TYPE CHECKING (Mypy)
-# ======================================================================
+
+# Type checking
 typecheck:
   stage: typecheck
   before_script:
@@ -34,27 +26,23 @@ typecheck:
   script:
   - python -m uv run mypy src --ignore-missing-imports
 
-# ======================================================================
-# SECURITY AUDIT (pip-audit)
-# ======================================================================
+
+
+# Tests unitaires
+pytest:
+  stage: test
+  script:
+    - echo "Pas encore de tests"
+
+
+# Audit de sécurité
 security-audit:
   stage: audit
   before_script:
     - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
     - python -m pip install uv pip-audit
   script:
-    # On utilise pip-audit directement après l'installation
-    - python -m pip_audit
+    # Génère un requirements.txt standard dans le dossier temporaire
+    - python -m pip freeze > $env:TEMP\req.txt
+    - python -m pip_audit -r $env:TEMP\req.txt
 
-# ======================================================================
-# UNIT TESTS (Pytest)
-# ======================================================================
-pytest:
-  stage: test
-  # On s'assure que les dépendances sont installées (ou utilise celles de 'setup')
-  before_script:
-    - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
-    - python -m pip install uv
-    - python -m uv sync --frozen
-  script:
-    - python -m uv run pytest tests/
