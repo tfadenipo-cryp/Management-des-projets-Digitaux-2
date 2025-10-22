@@ -11,5 +11,6 @@ dependencies = [
     "streamlit>=1.50.0",
     "mypy",
     "pytest",
-    "pip-audit"
+    "pip-audit",
+    "statsmodels>=0.14.5",
 ]
