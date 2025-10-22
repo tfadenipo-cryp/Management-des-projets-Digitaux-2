@@ -1,6 +1,5 @@
 import pandas as pd
 from datetime import datetime
-import numpy as np
 
 # ======================================================================
 # DATA PREPARATION FUNCTIONS (Pure Business Logic for Unit Testing)
