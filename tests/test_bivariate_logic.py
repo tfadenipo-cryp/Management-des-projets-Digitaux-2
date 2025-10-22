@@ -10,7 +10,7 @@ from pathlib import Path
 # ======================================================================
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
-from functions.bivariate_logic import (
+from functions.logic.bivariate_logic import (
     prep_value_data,
     prep_age_data,
     prep_driver_age_data,

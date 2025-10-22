@@ -1,4 +1,4 @@
-from functions.main_app import run_dashboard
+from functions.utils.main_app import run_dashboard
 
 
 if __name__ == "__main__":

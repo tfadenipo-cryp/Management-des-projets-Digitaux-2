@@ -1,6 +1,5 @@
 """
 Core application logic: Configuration, Data Loading, and Page Dispatcher.
-Refactored for Portal Navigation and enhanced content in the Future Feature page.
 """
 import streamlit as st
 import pandas as pd
@@ -15,7 +14,7 @@ from functions.visualization import explore_variables
 from functions.analysis_power import search_by_power
 from functions.analysis_type import search_by_vehicle_type
 from functions.bivariate import render_bivariate_analysis 
-
+from functions.analysis_combined import search_by_type_and_power # <-- NOUVEL IMPORT
 
 # ======================================================================
 # DATA LOADING & CONFIGURATION
@@ -28,16 +27,18 @@ def load_data_pipeline():
         df = get_processed_data()
     return df
 
+# Ajout de la nouvelle page au map
 PAGE_MAP = {
     "HOME": "Home",
     "RISK_ANALYSIS": "Specific Risk Analysis",
     "VARIABLE_EXPLORATION": "Variable Exploration",
     "BIVARIATE_ANALYSIS": "Bivariate Analysis",
+    "COMBINED_RISK": "Combined Risk Analysis" # Nouvelle page (si vous vouliez un nouveau bouton principal)
 }
 
 
 # ======================================================================
-# NAVIGATION UTILS & CSS
+# NAVIGATION UTILS & CSS (Le code CSS reste inchangé)
 # ======================================================================
 
 def inject_css():
@@ -75,7 +76,7 @@ def render_back_home_button():
 
 
 # ======================================================================
-# PAGE RENDERING FUNCTIONS
+# PAGE RENDERING FUNCTIONS (Mise à jour pour le nouvel onglet)
 # ======================================================================
 
 def render_home_page(df: pd.DataFrame):
@@ -104,7 +105,7 @@ def render_home_page(df: pd.DataFrame):
 
     with cols[0]:
         st.subheader("Specific Risk Analysis")
-        st.markdown('<p>Analysis by Vehicle Power and Risk Type.</p>', unsafe_allow_html=True)
+        st.markdown('<p>Analysis by Vehicle Power and Risk Type (includes combined search).</p>', unsafe_allow_html=True)
         if st.button("Start Risk Analysis", key="btn_analysis"):
             st.session_state.page = "RISK_ANALYSIS"
             st.rerun()
@@ -129,9 +130,11 @@ def render_analysis_page(df: pd.DataFrame):
     st.title("Specific Risk and Claims Analysis")
     st.markdown("---")
 
-    tab_power, tab_type = st.tabs([
+    # AJOUT DU NOUVEL ONGLETTI
+    tab_power, tab_type, tab_combined = st.tabs([
         "Analysis by Vehicle Power", 
-        "Analysis by Risk Type"
+        "Analysis by Risk Type",
+        "Combined Search" # <-- NOUVEL ONGLETTI
     ])
     
     with tab_power:
@@ -141,6 +144,9 @@ def render_analysis_page(df: pd.DataFrame):
     with tab_type:
         st.header("Analysis by Risk Type")
         search_by_vehicle_type(df)
+        
+    with tab_combined: # <-- Rendu de la nouvelle fonction ici
+        search_by_type_and_power(df)
         
     render_back_home_button()
 

@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
-from functions.utils import display_results 
-from functions.analysis_type_logic import calculate_avg_cost_by_type # <-- Import Logique
+from functions.utils.utils import display_results 
+from functions.logic.analysis_type_logic import calculate_avg_cost_by_type # <-- Import Logique
 
 # ======================================================================
 # FEATURE 2: SEARCH BY VEHICLE 

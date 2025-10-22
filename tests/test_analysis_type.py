@@ -9,7 +9,7 @@ from pathlib import Path
 # ======================================================================
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
-from functions.analysis_type_logic import calculate_avg_cost_by_type 
+from functions.logic.analysis_type_logic import calculate_avg_cost_by_type 
 
 class TestTypeAnalysis(unittest.TestCase):
 
