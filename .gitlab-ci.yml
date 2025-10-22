@@ -7,25 +7,25 @@ stages:
   - test
 
 before_script:
-  - sh -c "pip install uv pip-audit"
-  - sh -c "uv sync --frozen"
+  - pip install uv pip-audit
+  - uv sync --frozen
 
 lint:
   stage: lint
   script:
-    - sh -c "uv run ruff check src/"
+    - uv run ruff check src/ --diff --exit-code 
 
 typecheck:
   stage: typecheck
   script:
-    - sh -c "uv run mypy src/ --ignore-missing-imports"
+    - uv run mypy src/ --ignore-missing-imports
 
 security-audit:
   stage: audit
   script:
-    - sh -c "pip-audit"
+    - pip-audit
 
 pytest:
   stage: test
   script:
-    - sh -c "uv run pytest tests/"
+    - uv run pytest tests/
