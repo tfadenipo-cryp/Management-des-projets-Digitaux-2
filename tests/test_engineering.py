@@ -25,7 +25,6 @@ def clean_and_transform(data: pd.DataFrame) -> pd.DataFrame:
         return data
 
     df = data.copy()
-    s
     df.columns = df.columns.str.lower()
 
     date_cols = ["date_start_contract", "date_last_renewal", "date_next_renewal", 
