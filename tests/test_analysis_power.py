@@ -4,8 +4,12 @@ import numpy as np
 import sys
 from pathlib import Path
 
+# ======================================================================
+# FEATURE 1: SEARCH BY VEHICLE POWER
+# ======================================================================
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
-from functions.analysis_power_logic import calculate_avg_cost_by_power 
+from functions.analysis_power import calculate_avg_cost_by_power # <-- IMPORT CORRIGÉ
 
 class TestPowerAnalysis(unittest.TestCase):
 

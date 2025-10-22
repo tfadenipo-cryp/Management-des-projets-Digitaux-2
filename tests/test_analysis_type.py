@@ -4,8 +4,12 @@ import numpy as np
 import sys
 from pathlib import Path
 
+# ======================================================================
+# FEATURE 2: SEARCH BY VEHICLE TYPE
+# ======================================================================
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
-from functions.analysis_type_logic import calculate_avg_cost_by_type 
+from functions.analysis_type import calculate_avg_cost_by_type 
 
 class TestTypeAnalysis(unittest.TestCase):
 
@@ -29,8 +33,8 @@ class TestTypeAnalysis(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_handling_missing_data(self):
-        result_df = calculate_avg_cost_by_type(self.df_test, "Motorbike")
-        self.assertIsNotNone(result_df) 
+        result = calculate_avg_cost_by_type(self.df_test, "Motorbike")
+        self.assertIsNotNone(result) 
 
 
 if __name__ == '__main__':
