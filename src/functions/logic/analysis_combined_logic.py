@@ -1,30 +1,51 @@
+import unittest
 import pandas as pd
 import numpy as np
+import sys
+from pathlib import Path
 
+# ======================================================================
+# CONFIGURATION ET IMPORTS
+# ======================================================================
 
-def calculate_avg_cost_combined(df: pd.DataFrame, selected_type: str, selected_power: float) -> float | None:
-    """Calculates the average claim cost for a specific vehicle type AND power combination."""
+# Assurez-vous que ce chemin est inclus pour les imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
+from functions.logic.analysis_combined_logic import calculate_avg_cost_combined 
+
+class TestCombinedAnalysis(unittest.TestCase):
+    """Teste la logique de calcul du coût moyen pour une combinaison Type ET Puissance."""
+
+    def setUp(self):
+        """Définit un DataFrame de test simulé."""
+        self.df_test = pd.DataFrame({
+            "type_risk": [1, 1, 3, 3, 3], 
+            "power": [50, 80, 80, 100, 100],
+            "cost_claims_year": [100, 200, 300, 400, 600] 
+        })
+        self.df_test.columns = self.df_test.columns.str.lower()
     
-    # Mapper les codes de risque comme dans les autres fonctions
-    vehicle_type_map = {
-        1: "Motorbike",
-        2: "Van",
-        3: "Passenger Car",
-        4: "Agricultural Vehicle"
-    }
+    def test_calculation_valid(self):
+        """Vérifie le coût moyen pour 'Passenger Car' et 100 HP."""
+        # Expected: (400 + 600) / 2 = 500
+        result = calculate_avg_cost_combined(self.df_test, "Passenger Car", 100)
+        self.assertAlmostEqual(result, 500.0, places=2)
 
-    # Nettoyer les données essentielles
-    df_clean = df.dropna(subset=["type_risk", "cost_claims_year", "power"]).copy()
-    df_clean["vehicle_type"] = df_clean["type_risk"].map(vehicle_type_map)
+    def test_calculation_single_record(self):
+        """Vérifie le coût moyen pour 'Motorbike' et 50 HP (un seul enregistrement)."""
+        # Expected: 100
+        result = calculate_avg_cost_combined(self.df_test, "Motorbike", 50)
+        self.assertAlmostEqual(result, 100.0, places=2)
 
-    # Filtrer les données
-    filtered = df_clean[
-        (df_clean["vehicle_type"] == selected_type) & 
-        (df_clean["power"] == selected_power)
-    ]
+    def test_combination_not_found(self):
+        """Vérifie que None est retourné pour une combinaison inexistante."""
+        # Passenger Car + 50 HP n'existe pas
+        result = calculate_avg_cost_combined(self.df_test, "Passenger Car", 50)
+        self.assertIsNone(result)
 
-    if not filtered.empty:
-        # Calculer la moyenne
-        return filtered["cost_claims_year"].mean()
-    else:
-        return None
+    def test_type_non_existent(self):
+        """Vérifie que None est retourné pour un type non mappé ou inexistant dans les données."""
+        result = calculate_avg_cost_combined(self.df_test, "Truck", 100)
+        self.assertIsNone(result)
+
+if __name__ == '__main__':
+    unittest.main(argv=['first-arg-is-ignored'], exit=False)
