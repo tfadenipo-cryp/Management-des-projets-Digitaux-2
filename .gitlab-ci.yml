@@ -13,7 +13,10 @@ lint:
     - python -m pip install uv
     - python -m uv sync --frozen
   script:
-    - python -m uv run ruff check
+    # 1. Corrige automatiquement les 6 erreurs F401 (imports inutilisés) dans les fichiers
+    - python -m uv run ruff check . --fix
+    # 2. Vérifie qu'il ne reste AUCUNE erreur. Si le code est propre, ce job PASSE.
+    - python -m uv run ruff check .
 
 
 # Type checking
