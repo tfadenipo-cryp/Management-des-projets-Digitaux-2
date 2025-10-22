@@ -1,47 +1,31 @@
+image: python:3.13-slim
+
 stages:
   - lint
   - typecheck
   - audit
   - test
-# Lint
+
+before_script:
+  - pip install uv pip-audit
+  - uv sync --frozen
+
 lint:
   stage: lint
-  before_script:
-    - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
-    - python --version
-    - python -m pip install --upgrade pip
-    - python -m pip install uv
-    - python -m uv sync --frozen
   script:
-    - python -m uv run ruff check
+    - uv run ruff check src/
 
-
-# Type checking
 typecheck:
   stage: typecheck
-  before_script:
-    - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
-    - python -m pip install uv
-    - python -m uv sync --frozen
   script:
-  - python -m uv run mypy src --ignore-missing-imports
+    - uv run mypy src/ --ignore-missing-imports
 
+security-audit:
+  stage: audit
+  script:
+    - pip-audit
 
-
-# Tests unitaires
 pytest:
   stage: test
   script:
-    - echo "Pas encore de tests"
-
-
-# Audit de sécurité
-security-audit:
-  stage: audit
-  before_script:
-    - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
-    - python -m pip install uv pip-audit
-  script:
-    # Génère un requirements.txt standard dans le dossier temporaire
-    - python -m pip freeze > $env:TEMP\req.txt
-    - python -m pip_audit -r $env:TEMP\req.txt
+    - uv run pytest tests/
