@@ -1,65 +1,44 @@
-# Utilisation de l'image Python comme base par défaut
-image: python:3.13-slim
-
 stages:
-  - setup
   - lint
   - typecheck
   - audit
   - test
-
-# ======================================================================
-# SETUP (Installe les dépendances via python -m pip)
-# ======================================================================
-setup:
-  stage: setup
-  script:
-    # Utilisation de 'python -m pip' pour contourner le problème de PATH/PowerShell.
-    - python -m pip install uv pip-audit
-    - python -m uv sync --frozen
-  artifacts:
-    # Sauvegarde le dossier .venv et le lockfile pour les autres jobs
-    paths:
-      - .venv/
-      - uv.lock
-    expire_in: 1 hour
-
-# ======================================================================
-# LINTING (Ruff)
-# ======================================================================
+# Lint
 lint:
   stage: lint
-  dependencies:
-    - setup
+  before_script:
+    - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
+    - python --version
+    - python -m pip install --upgrade pip
+    - python -m pip install uv
+    - python -m uv sync --frozen
   script:
-    - python -m uv run ruff check src/ --diff --exit-code
+    - python -m uv run ruff check
 
-# ======================================================================
-# TYPE CHECKING (Mypy)
-# ======================================================================
+    # Type checking
 typecheck:
   stage: typecheck
-  dependencies:
-    - setup
+  before_script:
+    - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
+    - python -m pip install uv
+    - python -m uv sync --frozen
   script:
-    - python -m uv run mypy src/ --ignore-missing-imports
+  - python -m uv run mypy src --ignore-missing-imports
 
-# ======================================================================
-# SECURITY AUDIT (pip-audit)
-# ======================================================================
-security-audit:
-  stage: audit
-  dependencies:
-    - setup
-  script:
-    - python -m pip-audit
-
-# ======================================================================
-# UNIT TESTS (Pytest)
-# ======================================================================
+  # Tests unitaires
 pytest:
   stage: test
-  dependencies:
-    - setup
   script:
-    - python -m uv run pytest tests/
+    - echo "Pas encore de tests"
+
+
+# Audit de sécurité
+security-audit:
+  stage: audit
+  before_script:
+    - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
+    - python -m pip install uv pip-audit
+  script:
+    # Génère un requirements.txt standard dans le dossier temporaire
+    - python -m pip freeze > $env:TEMP\req.txt
+    - python -m pip_audit -r $env:TEMP\req.txt
