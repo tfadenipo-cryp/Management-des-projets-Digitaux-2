@@ -9,15 +9,16 @@ stages:
   - test
 
 # ======================================================================
-# SETUP (Job pour garantir l'installation avant les autres)
+# SETUP (Installe les dépendances et crée un artefact réutilisable)
 # ======================================================================
 setup:
   stage: setup
   script:
+    # On doit forcer l'installation dans l'environnement Docker
     - pip install uv pip-audit
     - uv sync --frozen
   artifacts:
-    # Sauvegarde l'environnement virtuel pour le réutiliser dans les autres jobs (gain de temps)
+    # Sauvegarde le dossier .venv et le lockfile pour les autres jobs
     paths:
       - .venv/
       - uv.lock
@@ -29,8 +30,9 @@ setup:
 lint:
   stage: lint
   dependencies:
-    - setup # Dépend du job setup
+    - setup # Récupère l'artefact .venv
   script:
+    # Exécute Ruff Check (vous devez d'abord l'exécuter localement avec --fix)
     - uv run ruff check src/ --diff --exit-code
 
 # ======================================================================
