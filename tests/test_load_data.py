@@ -8,7 +8,7 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import load_data
+from functions import load_data # noqa: E402
 
 
 def test_load_data_returns_dataframe():

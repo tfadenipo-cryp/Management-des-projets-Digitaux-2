@@ -8,7 +8,7 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import search_by_type_and_power
+from functions import search_by_type_and_power # noqa: E402
 
 
 @pytest.fixture

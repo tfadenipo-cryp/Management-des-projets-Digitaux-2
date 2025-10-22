@@ -7,7 +7,7 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import main_dashboard
+from functions import main_dashboard # noqa: E402
 
 
 def test_main_dashboard_runs(monkeypatch):

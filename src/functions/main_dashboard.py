@@ -9,7 +9,7 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import (
+from functions import (# noqa: E402
     load_data,
     search_by_power,
     search_by_vehicle_type,
