@@ -1,6 +1,18 @@
 
 # Car Insurance Analysis Application
 
+## README Summary
+
+- [Description](#description)
+- [Features](#features)
+- [Dataset](#dataset)
+- [Variable Descriptions](#variable-descriptions)
+- [Installation and Usage](#installation-and-usage)
+- [Data Diagram](#data-diagram)
+- [Project Structure](#project-structure)
+- [CI/CD](#ci-cd)
+- [Team Members](#team-members)
+
 
 ## Description
 This project is part of the Management of Digital Projects 2 course.
@@ -20,42 +32,44 @@ to explore and analyze a car insurance dataset.
 You can access the dataset [here](https://data.mendeley.com/datasets/5cxyb5fp4f/2?utm_source=search).  
 Published on July 30, 2024, by Josep Lledo and Jose M. Pavià.
 
+## Variable Descriptions
 
-## Variable Definitions
+- **id** : Identifiant unique du client.  
+- **date_start_contract** : Date de début du contrat d’assurance.  
+- **date_last_renewal** : Date du dernier renouvellement du contrat.  
+- **date_next_renewal** : Date prévue pour le prochain renouvellement.  
+- **date_birth** : Date de naissance du titulaire du contrat.  
+- **date_driving_licence** : Date d’obtention du permis de conduire.  
+- **distribution_channel** : Canal de distribution de l’assurance (ex. agence, en ligne).  
+- **seniority** : Ancienneté du contrat (en années).  
+- **policies_in_force** : Nombre de polices actives actuellement.  
+- **max_policies** : Nombre maximum de polices détenues par le client.  
+- **max_products** : Nombre maximum de produits d’assurance souscrits.  
+- **lapse** : Indicateur de résiliation ou d’arrêt du contrat (oui/non).  
+- **date_lapse** : Date de résiliation si applicable.  
+- **payment** : Mode de paiement du contrat (mensuel, annuel, etc.).  
+- **premium** : Montant de la prime d’assurance.  
+- **cost_claims_year** : Coût total des sinistres pour l’année en cours.  
+- **n_claims_year** : Nombre de sinistres déclarés cette année.  
+- **n_claims_history** : Nombre total de sinistres historiques.  
+- **r_claims_history** : Montant total des remboursements sur l’historique des sinistres.  
+- **type_risk** : Type de risque assuré (ex. automobile, habitation).  
+- **area** : Zone géographique du client.  
+- **second_driver** : Indicateur de présence d’un second conducteur.  
+- **year_matriculation** : Année d’immatriculation du véhicule.  
+- **power** : Puissance du véhicule (en chevaux).  
+- **cylinder_capacity** : Cylindrée du moteur (en cm³).  
+- **value_vehicle** : Valeur estimée du véhicule.  
+- **n_doors** : Nombre de portes du véhicule.  
+- **type_fuel** : Type de carburant du véhicule (essence, diesel, électrique…).  
+- **length** : Longueur du véhicule (en mètres ou cm selon l’unité).  
+- **weight** : Poids du véhicule (en kg).  
 
-...
 
 ## Installation and Usage
 
-### Method 1 : With Docker
 
-1. **Install Docker Desktop**  
-   Download and install from [www.docker.com](https://www.docker.com) and make sure Docker is running.
-
-2. **Clone the repository**  
-   ```bash
-   git clone https://gitlab-mi.univ-reims.fr/fade0003/management-des-projets-digitaux-2.git
-
-    ```
-3. **Navigate to the project directory**
-    ```bash
-    cd management-des-projets-digitaux-2
-    ```
-
-
-4. **Build and run the app**
-    ```bash
-    docker-compose -f docker-compose.yaml up -d --build
-    ```
-5. **Launch the app inside the container**
-    ```bash
-    docker exec -it <container_name> uv run streamlit run main.py
-
-    ```
-#### Replace <container_name> with the actual container name (check with docker ps).
-
-
-### Method 2 : Using Python and uv
+### Method : Using Python and uv
 
 1. **Install Python 3.13**
     Download and install from [Python.org](https://www.python.org/)
