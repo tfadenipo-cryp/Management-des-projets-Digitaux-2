@@ -15,6 +15,12 @@ to explore and analyze a car insurance dataset.
 - Features: interactive visualizations, filtering, basic statistical analysis
 - Deployment: automated CI/CD with Docker
 
+## Dataset
+
+You can access the dataset [here](https://data.mendeley.com/datasets/5cxyb5fp4f/2?utm_source=search).  
+Published on July 30, 2024, by Josep Lledo and Jose M. Pavià.
+
+
 ## Variable Definitions
 
 ...
@@ -76,7 +82,7 @@ to explore and analyze a car insurance dataset.
 
 ## Data flow diagramm
 
-![Flow](docs/flow.png)
+![Flow](docs/flow.jpeg)
 
 ## Project Structure
 
