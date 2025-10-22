@@ -2,10 +2,10 @@ import unittest
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).resolve().parents[1] / "src")) 
-
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
 from functions.bivariate_logic import (
     prep_value_data,
     prep_age_data,
@@ -13,18 +13,9 @@ from functions.bivariate_logic import (
     prep_area_data
 )
 
-class TestBivariateDataPrep(unittest.TestCase):
-    """
-    Test suite for the data preparation functions in bivariate_logic.py.
-    Each test focuses on a specific data preparation function.
-    """
-    
-    @classmethod
-    def setUpClass(cls):
-        pass 
-        
+class TestBivariateLogic(unittest.TestCase):
+
     def test_prep_value_data(self):
-        """Tests the data preparation for the 'Vehicle Value vs. Premium' analysis."""
         data = {
             'value_vehicle': [10000, 20000, 999999, 'invalid', np.nan],
             'premium': [500, 800, 9999, 600, 700]
@@ -37,7 +28,6 @@ class TestBivariateDataPrep(unittest.TestCase):
         self.assertTrue(result_df['value_vehicle'].max() < 300000) 
 
     def test_prep_age_data(self):
-        """Tests the data preparation for the 'Vehicle Age vs. Premium' analysis."""
         current_year = datetime.now().year
         data = {
             'year_matriculation': [current_year - 5, current_year - 15, current_year + 5, 'invalid', np.nan, current_year - 10],
@@ -53,7 +43,6 @@ class TestBivariateDataPrep(unittest.TestCase):
         self.assertIn(10, result_df['Vehicle_Age'].values)
         
     def test_prep_driver_age_data(self):
-        """Tests the data preparation for the 'Driver Age vs. Premium' analysis."""
         current_date = datetime.now().date()
         date_30_years_ago = current_date.replace(year=current_date.year - 30)
         
@@ -62,16 +51,13 @@ class TestBivariateDataPrep(unittest.TestCase):
             'premium': [500, 1200, 900, 600, 700]
         }
         df = pd.DataFrame(data)
-        
         result_df = prep_driver_age_data(df, 'date_birth', 'premium')
         
         self.assertEqual(len(result_df), 2)
         self.assertIn('Driver_Age', result_df.columns)
-        
         self.assertTrue(all(age >= 18 for age in result_df['Driver_Age']))
         
     def test_prep_area_data(self):
-        """Tests the data preparation for the 'Premium by Area' analysis."""
         data = {
             'area': [0, 1, 0, 1, np.nan, 0, 999], 
             'premium': [400, 700, 350, 750, 500, 99999, 600]
