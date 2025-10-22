@@ -1,52 +1,77 @@
-import unittest
 import pandas as pd
-from datetime import date
-import sys
 from pathlib import Path
-import numpy as np
+import streamlit as st
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
-from functions.engineering import clean_and_transform 
+# ======================================================================
+# DATA LOADING & PREPROCESSING PIPELINE
+# ======================================================================
 
-class TestDataEngineering(unittest.TestCase):
+# NOTE: Les fonctions load_raw_data et save_processed_data sont nécessaires ici.
+
+@st.cache_data
+def load_raw_data() -> pd.DataFrame:
+    """Loads raw vehicle insurance data."""
+    project_root = Path(__file__).resolve().parents[2] 
+    data_path = project_root / "data/raw/Motor_vehicle_insurance_data.csv"
     
-    def setUp(self):
-        """Définit un DataFrame de test avec les dates au format brut."""
-        self.raw_data = pd.DataFrame({
-            "ID": [1, 2],
-            "Date_start_contract": ["05/11/2015", "01/01/2025"], 
-            "Date_last_renewal": ["05/11/2015", "01/01/2025"], 
-            "Date_birth": ["18/03/1975", "INVALID"], 
-            "Premium": [222.52, 300.00],
-            "Cost_claims_year": [0, 500],
-            "UNMODIFIED_COL": [1, 2]
-        })
-    
-    def test_column_rename(self):
-        """Vérifie que tous les noms de colonnes sont passés en minuscules."""
-        result_df = clean_and_transform(self.raw_data)
-        self.assertTrue(all(col == col.lower() for col in result_df.columns))
-        self.assertIn('date_start_contract', result_df.columns)
+    try:
+        return pd.read_csv(data_path, sep=";")
+    except FileNotFoundError:
+        # st.error ne peut être appelé que dans Streamlit, donc on le met ici
+        if 'st' in sys.modules:
+             st.error(f"Raw data file not found at: {data_path}")
+        return pd.DataFrame()
 
-    def test_date_conversion(self):
-        """Vérifie que les colonnes de dates sont converties en objets datetime.date."""
-        result_df = clean_and_transform(self.raw_data)
+
+def clean_and_transform(data: pd.DataFrame) -> pd.DataFrame:
+    """Applies cleaning and standard transformations."""
+    if data.empty:
+        return data
+
+    df = data.copy()
+    
+    # Standardize column names (lowercase)
+    df.columns = df.columns.str.lower()
+
+    # Convert date columns (cible des tests unitaires)
+    date_cols = ["date_start_contract", "date_last_renewal", "date_next_renewal", 
+                 "date_birth", "date_driving_licence", "date_lapse"]
+    
+    for col in date_cols:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], format="%d/%m/%Y", errors='coerce').dt.date
+
+    return df
+
+
+def save_processed_data(df: pd.DataFrame) -> Path:
+    """Saves the processed DataFrame to the 'processed' directory."""
+    project_root = Path(__file__).resolve().parents[2] 
+    output_path = project_root / "data/processed/new_motor_vehicle_insurance_data.csv"
+    
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_path, index=False, sep=';')
+    
+    return output_path
+
+
+@st.cache_data
+def get_processed_data() -> pd.DataFrame:
+    """Runs the full pipeline: Load -> Clean -> Save -> Return."""
+    raw_data = load_raw_data()
+    processed_data = clean_and_transform(raw_data)
+    
+    # Le 'if not processed_data.empty' était dans le test, pas dans la fonction de production.
+    if not processed_data.empty:
+        save_processed_data(processed_data)
         
-        self.assertEqual(result_df['date_start_contract'].iloc[0], date(2015, 11, 5))
-        self.assertEqual(result_df['date_start_contract'].iloc[1], date(2025, 1, 1))
-        self.assertEqual(result_df['date_birth'].iloc[0], date(1975, 3, 18))
-
-    def test_invalid_date_handling(self):
-        """Vérifie que les dates non valides sont traitées (retournent NaN après conversion)."""
-        result_df = clean_and_transform(self.raw_data)
-    
-        self.assertTrue(pd.isna(result_df['date_birth'].iloc[1]))
-
-    def test_data_integrity(self):
-        """Vérifie que les colonnes non modifiées conservent leurs données."""
-        result_df = clean_and_transform(self.raw_data)
-        self.assertEqual(result_df['unmodified_col'].iloc[0], 1)
+    return processed_data
 
 
-if __name__ == '__main__':
-    unittest.main(argv=['first-arg-is-ignored'], exit=False)
+if __name__ == "__main__":
+    # Importation locale pour ne pas causer de circularité
+    # (Uniquement si ce fichier est exécuté directement)
+    import sys 
+    # Appel du pipeline complet
+    get_processed_data()
+    print("Data processing complete. Processed data saved to data/processed.")

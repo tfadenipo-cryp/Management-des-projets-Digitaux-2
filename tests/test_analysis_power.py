@@ -9,7 +9,7 @@ from pathlib import Path
 # ======================================================================
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
-from functions.analysis_power import calculate_avg_cost_by_power # <-- IMPORT CORRIGÉ
+from functions.analysis_power_logic import calculate_avg_cost_by_power 
 
 class TestPowerAnalysis(unittest.TestCase):
 

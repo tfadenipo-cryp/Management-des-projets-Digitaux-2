@@ -1,64 +1,53 @@
+import unittest
 import pandas as pd
+from datetime import date
+import sys
 from pathlib import Path
-import streamlit as st
+import numpy as np
 
-# ======================================================================
-# DATA LOADING & PREPROCESSING PIPELINE
-# ======================================================================
+# Importe la fonction de nettoyage depuis le module source
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src")) 
+from functions.engineering import clean_and_transform 
 
-@st.cache_data
-def load_raw_data() -> pd.DataFrame:
-    """Loads raw vehicle insurance data."""
-    project_root = Path(__file__).resolve().parents[2] 
-    data_path = project_root / "data/raw/Motor_vehicle_insurance_data.csv"
+class TestDataEngineering(unittest.TestCase):
     
-    try:
-        return pd.read_csv(data_path, sep=";")
-    except FileNotFoundError:
-        st.error(f"Raw data file not found at: {data_path}")
-        return pd.DataFrame()
-
-
-def clean_and_transform(data: pd.DataFrame) -> pd.DataFrame:
-    """Applies cleaning and standard transformations."""
-    if data.empty:
-        return data
-
-    df = data.copy()
-    df.columns = df.columns.str.lower()
-
-    date_cols = ["date_start_contract", "date_last_renewal", "date_next_renewal", 
-                 "date_birth", "date_driving_licence", "date_lapse"]
+    def setUp(self):
+        # Définit un DataFrame de test avec les dates au format brut (DD/MM/YYYY)
+        self.raw_data = pd.DataFrame({
+            "ID": [1, 2],
+            "Date_start_contract": ["05/11/2015", "01/01/2025"], 
+            "Date_last_renewal": ["05/11/2015", "01/01/2025"], 
+            "Date_birth": ["18/03/1975", "INVALID"], # Date invalide
+            "Premium": [222.52, 300.00],
+            "Cost_claims_year": [0, 500],
+            "UNMODIFIED_COL": [1, 2]
+        })
     
-    for col in date_cols:
-        if col in df.columns:
-            df[col] = pd.to_datetime(df[col], format="%d/%m/%Y", errors='coerce').dt.date
+    def test_column_rename(self):
+        # Vérifie que tous les noms de colonnes sont passés en minuscules.
+        result_df = clean_and_transform(self.raw_data)
+        self.assertTrue(all(col == col.lower() for col in result_df.columns))
+        self.assertIn('date_start_contract', result_df.columns)
 
-    return df
-
-
-def save_processed_data(df: pd.DataFrame) -> Path:
-    """Saves the processed DataFrame to the 'processed' directory."""
-    project_root = Path(__file__).resolve().parents[2] 
-    output_path = project_root / "data/processed/new_motor_vehicle_insurance_data.csv"
-    
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path, index=False, sep=';')
-    
-    return output_path
-
-
-@st.cache_data
-def get_processed_data() -> pd.DataFrame:
-    """Runs the full pipeline: Load -> Clean -> Save -> Return."""
-    raw_data = load_raw_data()
-    processed_data = clean_and_transform(raw_data)
-    if not processed_data.empty:
-        save_processed_data(processed_data)
+    def test_date_conversion(self):
+        # Vérifie que les dates valides sont converties en objets datetime.date.
+        result_df = clean_and_transform(self.raw_data)
         
-    return processed_data
+        self.assertEqual(result_df['date_start_contract'].iloc[0], date(2015, 11, 5))
+        self.assertEqual(result_df['date_start_contract'].iloc[1], date(2025, 1, 1))
+        self.assertEqual(result_df['date_birth'].iloc[0], date(1975, 3, 18))
+
+    def test_invalid_date_handling(self):
+        # Vérifie que les dates non valides sont traitées et donnent NaN (ou NaT).
+        result_df = clean_and_transform(self.raw_data)
+        
+        self.assertTrue(pd.isna(result_df['date_birth'].iloc[1]))
+
+    def test_data_integrity(self):
+        # Vérifie que les colonnes non modifiées conservent leurs données.
+        result_df = clean_and_transform(self.raw_data)
+        self.assertEqual(result_df['unmodified_col'].iloc[0], 1)
 
 
-if __name__ == "__main__":
-    get_processed_data()
-    print("Data processing complete. Processed data saved to data/processed.")
+if __name__ == '__main__':
+    unittest.main(argv=['first-arg-is-ignored'], exit=False)
