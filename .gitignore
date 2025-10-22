@@ -1,0 +1,33 @@
+Python
+
+pycache/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+env/
+venv/
+
+Streamlit
+
+.streamlit/
+
+Data
+
+Ignore processed data. Only keep raw data in Git.
+
+data/processed/
+
+Reports
+
+Ignore generated figures and reports
+
+reports/
+
+IDE / OS
+
+.vscode/
+.idea/
+.DS_Store
+*.swp
