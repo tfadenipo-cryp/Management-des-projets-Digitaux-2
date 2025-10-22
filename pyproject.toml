@@ -11,6 +11,5 @@ dependencies = [
     "streamlit>=1.50.0",
     "mypy",
     "pytest",
-    "pip-audit",
-    "statsmodels" # <-- NOUVELLE DÉPENDANCE REQUISE
+    "pip-audit"
 ]
