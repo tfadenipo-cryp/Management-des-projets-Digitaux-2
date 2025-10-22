@@ -74,15 +74,14 @@ to explore and analyze a car insurance dataset.
     uv run streamlit run main.py
     ```
 
-## Data flow diagram 
+## Data flow diagramm
 
-    ![Flow](docs/flow.png)
-
+![Flow](docs/flow.png)
 
 ## Project Structure
 
 ```text
-.
+
 ├── .venv/                  # Virtual environment
 ├── data/
 │   ├── raw/                # Raw data
