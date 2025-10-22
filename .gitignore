@@ -1,0 +1,22 @@
+# --- PYTHON CACHE ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- VIRTUAL ENVIRONMENTS ---
+.venv/
+venv/
+
+# --- SYSTEM FILES ---
+.DS_Store
+Thumbs.db
+
+# --- JUPYTER / STREAMLIT ---
+.ipynb_checkpoints/
+.streamlit/
+
+# --- UV / BUILD ---
+.uv/
+dist/
+build/
