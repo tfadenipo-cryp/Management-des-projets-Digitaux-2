@@ -21,11 +21,13 @@ colnames_dates = ["date_start_contract","date_last_renewal", "date_next_renewal"
 for col in colnames_dates :
     data[col] = pd.to_datetime(data[col], format="%d/%m/%Y")
     data[col] = data[col].dt.date
-
+    
+    
+    
 
 
 
 
 #download gthe new_data.
 new_fata_path = Path(__file__).resolve().parents[2] / "data/processed/new_motor_vehicle_insurance_data.csv"
-data.to_csv(new_fata_path, index=False)
+#data.to_csv(new_fata_path, index=False)
