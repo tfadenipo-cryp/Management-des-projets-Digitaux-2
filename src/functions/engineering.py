@@ -24,9 +24,20 @@ for col in colnames_dates :
     
     
 
-print(len(data[data["cost_claims_year"]!=0]),len(data),"donc : ",100*len(data[data["cost_claims_year"]!=0])/len(data),"%\n19000 lignes pour faire le modele")
+#print(len(data[data["cost_claims_year"]!=0]),len(data),"donc : ",100*len(data[data["cost_claims_year"]!=0])/len(data),"%\n19000 lignes pour faire le modele")
 
+#transformation de type fuel 
+n_rows = len(data["type_fuel"])
 
+for i in range(n_rows):
+    var_test = data.loc[i,"type_fuel"]
+    if var_test == "P":
+        data.loc[i,"type_fuel"] = 1
+    elif var_test == "D" :
+        data.loc[i,"type_fuel"] = 2
+    else:
+        data.loc[i,"type_fuel"] = 0
+        
 
 
 
