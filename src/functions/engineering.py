@@ -23,7 +23,9 @@ for col in colnames_dates :
     data[col] = data[col].dt.date
     
     
-    
+
+print(len(data[data["cost_claims_year"]!=0]),len(data),"donc : ",100*len(data[data["cost_claims_year"]!=0])/len(data),"%\n19000 lignes pour faire le modele")
+
 
 
 
