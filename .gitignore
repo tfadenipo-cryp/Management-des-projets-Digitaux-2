@@ -7,10 +7,17 @@ __pycache__/
 # --- VIRTUAL ENVIRONMENTS ---
 .venv/
 venv/
+env/
+.Python
 
 # --- SYSTEM FILES ---
 .DS_Store
 Thumbs.db
+*.swp
+
+# --- IDE CONFIG ---
+.vscode/
+.idea/
 
 # --- JUPYTER / STREAMLIT ---
 .ipynb_checkpoints/
@@ -20,3 +27,13 @@ Thumbs.db
 .uv/
 dist/
 build/
+
+# --- DATA ---
+# Keep only raw data in Git
+data/processed/
+
+# --- REPORTS ---
+# Ignore generated figures and reports
+reports/
+
+
