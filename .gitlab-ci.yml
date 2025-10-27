@@ -40,7 +40,7 @@ pytest:
     - python -m uv sync --frozen
     - python -m pip install pytest
   script:
-    - pytest tests/ --maxfail=1 --disable-warnings -v
+    - python -m pytest tests/ --maxfail=1 --disable-warnings -v
 
 
 
