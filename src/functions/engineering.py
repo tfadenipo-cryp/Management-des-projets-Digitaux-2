@@ -15,9 +15,6 @@ def engineering()->  pd.DataFrame:
     Because the dataset will be modified in the future, this function will not remain unchanged.
     
     """
-    
-
-    
     #get data automatically by the link in the website
     url = "https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/5cxyb5fp4f-2.zip"
     resp = requests.get(url, timeout=60)
@@ -57,9 +54,5 @@ def engineering()->  pd.DataFrame:
             .astype("int8")
         )
         
-    #download the new_data (the old way to use the data)
-    #path_to_data = Path(__file__).resolve().parents[2] / "data/processed/new_motor_vehicle_insurance_data.csv"
-    #data.to_csv(path_to_data, index=False)
-    
     #the new way to use the data
     return data
