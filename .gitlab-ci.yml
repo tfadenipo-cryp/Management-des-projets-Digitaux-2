@@ -30,10 +30,11 @@ typecheck:
   - python -m uv run mypy src --ignore-missing-imports
 
 
-
 # Tests unitaires
 pytest:
   stage: test
+  variables:
+    PYTHONPATH: "$CI_PROJECT_DIR/src"
   before_script:
     - $env:Path += ";C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0;"
     - python -m pip install uv
@@ -42,7 +43,6 @@ pytest:
     - .venv\Scripts\Activate.ps1
   script:
     - python -m pytest tests/ --maxfail=1 --disable-warnings -v
-
 
 
 
