@@ -39,6 +39,7 @@ pytest:
     - python -m pip install uv
     - python -m uv sync --frozen
     - python -m pip install pytest
+    - .venv\Scripts\Activate.ps1
   script:
     - python -m pytest tests/ --maxfail=1 --disable-warnings -v
 
