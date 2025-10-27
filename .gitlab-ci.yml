@@ -34,8 +34,13 @@ typecheck:
 # Tests unitaires
 pytest:
   stage: test
+  image: python:3.11
+  before_script:
+    - pip install pytest
   script:
-    - echo "Pas encore de tests"
+    - pytest tests/ --maxfail=1 --disable-warnings -v
+
+
 
 
 # Audit de sécurité
