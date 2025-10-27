@@ -82,13 +82,18 @@ Published on July 30, 2024, by Josep Lledo and Jose M. Pavià.
     git clone https://gitlab-mi.univ-reims.fr/fade0003/management-des-projets-digitaux-2.git
     ```
 
+
 4. **Navigate to the project directory**
     ```bash
     cd management-des-projets-digitaux-2    
     ```
 
+5. **Install dependencies**
+    ```bash
+    uv sync --frozen
+    ```
 
-5. **Run the app**
+6. **Run the app**
 
     ```bash
     uv run streamlit run main.py
