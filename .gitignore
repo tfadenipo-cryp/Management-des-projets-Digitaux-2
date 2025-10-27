@@ -1,33 +1,39 @@
-Python
-
-pycache/
+# --- PYTHON CACHE ---
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
+
+# --- VIRTUAL ENVIRONMENTS ---
 .venv/
-env/
 venv/
+env/
+.Python
 
-Streamlit
+# --- SYSTEM FILES ---
+.DS_Store
+Thumbs.db
+*.swp
 
-.streamlit/
-
-Data
-
-Ignore processed data. Only keep raw data in Git.
-
-data/processed/
-
-Reports
-
-Ignore generated figures and reports
-
-reports/
-
-IDE / OS
-
+# --- IDE CONFIG ---
 .vscode/
 .idea/
-.DS_Store
-*.swp
+
+# --- JUPYTER / STREAMLIT ---
+.ipynb_checkpoints/
+.streamlit/
+
+# --- UV / BUILD ---
+.uv/
+dist/
+build/
+
+# --- DATA ---
+# Keep only raw data in Git
+data/processed/
+
+# --- REPORTS ---
+# Ignore generated figures and reports
+reports/
+
+

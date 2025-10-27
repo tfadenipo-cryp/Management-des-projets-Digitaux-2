@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 import streamlit as st
-from engineering import engineering
+from functions.engineering import engineering
 
 
 @st.cache_data
