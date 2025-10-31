@@ -1,6 +1,6 @@
-#Choix des vars pertinentes 
-#Var Cible : y = Cost_claims_year (C’est le coût total des sinistres supporté par l’assureur pour ce client sur l’année.)
-
+#Target variable (y) : cost_claims_year
+#Cette variable représente le montant total des indemnités versées par l’assureur au cours d’une année 
+# pour chaque client.
 """
 LASSO Model Script
 Ce script reproduit un modèle LASSO (équivalent glmnet en R) pour prédire 'cost_claims_year'.
