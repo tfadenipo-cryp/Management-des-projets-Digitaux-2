@@ -1,6 +1,6 @@
 #Target variable (y) : cost_claims_year
-#Cette variable représente le montant total des indemnités versées par l’assureur au cours d’une année 
-# pour chaque client.
+#Elle mesure le coût annuel total des sinistres (en euros) supporté par la compagnie 
+# d’assurance pour chaque assuré.
 """
 LASSO Model Script
 Ce script reproduit un modèle LASSO (équivalent glmnet en R) pour prédire 'cost_claims_year'.
