@@ -25,7 +25,12 @@ except ImportError:
 def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size: float = 0.2, random_state: int = 42):
     """
     Performs full data preprocessing for modeling.
-    ... (rest of the docstring) ...
+    - Cleans data
+    - Creates features (e.g., ages)
+    - Handles missing values (imputation)
+    - Encodes categorical variables
+    - Scales numerical variables
+    - Splits data into training and testing sets
     
     Returns: (X_train_final, X_test_final, y_train, y_test) on success, or (pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series()) on failure.
     """
@@ -61,18 +66,25 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
             return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series()
         y = df_processed[target_column]
 
+        # --- THIS IS THE FIX ---
+        # We will *keep* n_claims_history and r_claims_history as valid predictors.
+        # We ONLY drop IDs, raw dates, and the *outcomes* of the policy year.
         cols_to_drop = [
             'id', 'date_start_contract', 'date_last_renewal', 
             'date_next_renewal', 'date_birth', 'date_driving_licence', 'date_lapse',
             'year_matriculation',
-            'premium', 'n_claims_year', 'cost_claims_year', 
-            'n_claims_history', 'r_claims_history'
+            
+            # --- CRITICAL: Drop BOTH potential targets/leaks from X ---
+            'premium', 
+            'cost_claims_year',
+            
+            # Drop policy *outcomes* (not predictors)
+            'n_claims_year',
+            'lapse' # 'lapse' is an outcome of the year, not an input
         ]
         
-        X = df_processed.drop(columns=[col for col in cols_to_drop if col in df_processed.columns and col != target_column], errors='ignore')
-        if target_column in X.columns:
-             X = X.drop(columns=[target_column], errors='ignore')
-
+        X = df_processed.drop(columns=[col for col in cols_to_drop if col in df_processed.columns], errors='ignore')
+        
         # --- 3. Identify Feature Types ---
         categorical_features = [
             'distribution_channel', 'payment', 'type_risk', 
@@ -131,11 +143,10 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         
         print("✅ Preprocessing complete.")
         
-        # --- THIS IS THE CHANGE ---
         # Return all four sets of data
         return X_train_final, X_test_final, y_train, y_test
 
     except Exception as e:
         print(f"Error during preprocessing: {e}")
-        # Return empty objects to prevent 'NoneType' error
         return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series()
+

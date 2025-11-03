@@ -2,23 +2,18 @@
 BIC Model Selection Script
 This script performs forward stepwise feature selection using
 BIC (Bayesian Information Criterion) to find an optimal model
-for predicting insurer cost (cost_claims_year) and calculates
-its prediction error.
+for predicting the CUSTOMER PREMIUM (premium).
 """
 import pandas as pd
 import statsmodels.api as sm
 import sys
-import numpy as np # <-- ADDED THIS IMPORT
+import numpy as np
 from pathlib import Path
-
-# --- ADDED THIS IMPORT ---
 try:
-    from sklearn.metrics import mean_squared_error
+    from sklearn.metrics import mean_squared_error, r2_score # Import R-squared
 except ImportError:
     print("Error: Could not import sklearn.metrics. Please ensure scikit-learn is installed.")
     sys.exit(1)
-# --- END OF ADDED IMPORT ---
-
 
 # --- Add Project Root to sys.path to allow for src imports ---
 ROOT_DIR = str(Path(__file__).resolve().parents[2])
@@ -38,7 +33,9 @@ except ImportError as e:
 def perform_bic_selection(X, y):
     """
     Performs forward stepwise selection using BIC on a GLM.
-    ... (rest of the docstring) ...
+    
+    We use a Gamma GLM, which is the industry standard for
+    modeling positive, skewed values like insurance premiums.
     """
     print("\n--- Starting BIC Forward Stepwise Selection ---")
     
@@ -47,7 +44,8 @@ def perform_bic_selection(X, y):
     
     X_const = sm.add_constant(pd.DataFrame(index=X.index), prepend=True)
     try:
-        baseline_model = sm.GLM(y, X_const, family=sm.families.Tweedie(link=sm.families.links.log())).fit()
+        # --- CHANGE 1: Use Gamma family for Premiums ---
+        baseline_model = sm.GLM(y, X_const, family=sm.families.Gamma(link=sm.families.links.log())).fit()
         current_bic = baseline_model.bic
         best_model_results = baseline_model
         print(f"Baseline (Intercept-only) BIC: {current_bic:,.2f}")
@@ -71,7 +69,8 @@ def perform_bic_selection(X, y):
             X_step = sm.add_constant(X_step, prepend=True)
             
             try:
-                model = sm.GLM(y, X_step, family=sm.families.Tweedie(link=sm.families.links.log()))
+                # --- CHANGE 2: Use Gamma family for Premiums ---
+                model = sm.GLM(y, X_step, family=sm.families.Gamma(link=sm.families.links.log()))
                 results = model.fit()
                 step_bic = results.bic
                 
@@ -99,9 +98,9 @@ def perform_bic_selection(X, y):
 def main():
     """
     Main function to run the data loading, preprocessing,
-    and BIC selection process.
+    and BIC selection process for PREDICTING PREMIUM.
     """
-    print("--- Starting Modeling Process ---")
+    print("--- Starting PREMIUM Modeling Process ---")
     
     # 1. Load base data from the web
     print("Step 1: Loading base data via engineering()...")
@@ -113,8 +112,8 @@ def main():
     # 2. Apply shared preprocessing
     print("Step 2: Applying shared preprocessing...")
     # --- THIS IS THE CHANGE ---
-    # Now we get all 4 data sets back
-    X_train, X_test, y_train, y_test = preprocess_data_for_modeling(base_df, target_column='cost_claims_year')
+    # The target_column is now 'premium'
+    X_train, X_test, y_train, y_test = preprocess_data_for_modeling(base_df, target_column='premium')
     
     if X_train is None or X_train.empty or y_train.empty:
         print("❌ Preprocessing failed or resulted in empty data. Exiting.")
@@ -128,10 +127,9 @@ def main():
         print("\n--- Final Model Summary (based on BIC) ---")
         print(final_model_results.summary())
         
-        # --- NEW SECTION: CALCULATE PREDICTION ERROR ---
         print("\n--- Prediction Error (on Test Data) ---")
         
-        # 1. Prepare the test data: filter for selected features and add intercept
+        # 1. Prepare the test data
         X_test_selected = X_test[selected_features]
         X_test_with_const = sm.add_constant(X_test_selected, prepend=True)
         
@@ -139,17 +137,18 @@ def main():
         try:
             y_pred = final_model_results.predict(X_test_with_const)
             
-            # 3. Calculate the quadratic errors
+            # 3. Calculate the quadratic errors and R-squared
             mse = mean_squared_error(y_test, y_pred)
             rmse = np.sqrt(mse)
+            r2 = r2_score(y_test, y_pred) # R-squared
             
+            print(f"R-squared (on test data): {r2:,.4f}")
             print(f"Mean Squared Error (MSE): {mse:,.2f}")
             print(f"Root Mean Squared Error (RMSE): {rmse:,.2f}")
-            print(f"Mean cost_claims_year (for comparison): {y_test.mean():,.2f}")
+            print(f"Mean premium (for comparison): {y_test.mean():,.2f}")
 
         except Exception as e:
             print(f"Error during prediction on test set: {e}")
-        # --- END OF NEW SECTION ---
 
     else:
         print("BIC selection did not find a final model.")
