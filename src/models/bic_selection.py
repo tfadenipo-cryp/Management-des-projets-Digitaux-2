@@ -8,23 +8,20 @@ its prediction error.
 import pandas as pd
 import statsmodels.api as sm
 import sys
-import numpy as np # <-- ADDED THIS IMPORT
+import numpy as np 
 from pathlib import Path
 
-# --- ADDED THIS IMPORT ---
+
 try:
     from sklearn.metrics import mean_squared_error
 except ImportError:
     print("Error: Could not import sklearn.metrics. Please ensure scikit-learn is installed.")
     sys.exit(1)
-# --- END OF ADDED IMPORT ---
 
 
-# --- Add Project Root to sys.path to allow for src imports ---
 ROOT_DIR = str(Path(__file__).resolve().parents[2])
 if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
-# --- End of sys.path modification ---
 
 try:
     from src.functions.engineering import engineering
@@ -103,24 +100,21 @@ def main():
     """
     print("--- Starting Modeling Process ---")
     
-    # 1. Load base data from the web
     print("Step 1: Loading base data via engineering()...")
     base_df = engineering()
     if base_df is None or base_df.empty:
         print("❌ Failed to load base data. Exiting.")
         return
 
-    # 2. Apply shared preprocessing
     print("Step 2: Applying shared preprocessing...")
-    # --- THIS IS THE CHANGE ---
-    # Now we get all 4 data sets back
+ 
     X_train, X_test, y_train, y_test = preprocess_data_for_modeling(base_df, target_column='cost_claims_year')
     
     if X_train is None or X_train.empty or y_train.empty:
         print("❌ Preprocessing failed or resulted in empty data. Exiting.")
         return
         
-    # 3. Perform BIC selection (using only training data)
+    # BIC
     print("Step 3: Running BIC stepwise selection...")
     selected_features, final_model_results = perform_bic_selection(X_train, y_train)
     
@@ -128,18 +122,14 @@ def main():
         print("\n--- Final Model Summary (based on BIC) ---")
         print(final_model_results.summary())
         
-        # --- NEW SECTION: CALCULATE PREDICTION ERROR ---
         print("\n--- Prediction Error (on Test Data) ---")
         
-        # 1. Prepare the test data: filter for selected features and add intercept
         X_test_selected = X_test[selected_features]
         X_test_with_const = sm.add_constant(X_test_selected, prepend=True)
         
-        # 2. Make predictions on the test data
         try:
             y_pred = final_model_results.predict(X_test_with_const)
             
-            # 3. Calculate the quadratic errors
             mse = mean_squared_error(y_test, y_pred)
             rmse = np.sqrt(mse)
             
@@ -149,7 +139,6 @@ def main():
 
         except Exception as e:
             print(f"Error during prediction on test set: {e}")
-        # --- END OF NEW SECTION ---
 
     else:
         print("BIC selection did not find a final model.")

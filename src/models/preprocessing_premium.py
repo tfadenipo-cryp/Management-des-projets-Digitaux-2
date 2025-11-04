@@ -9,7 +9,6 @@ from datetime import datetime
 import sys
 import numpy as np
 
-# Import scikit-learn components
 try:
     from sklearn.model_selection import train_test_split
     from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -30,28 +29,28 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
     try:
         print(f"Starting preprocessing. Original shape: {df.shape}")
 
-        # --- 1. Feature Creation & Initial Filtering ---
+        # Initial Filtering 
         df_processed = df.copy()
         
-        # Create Driver_Age
+        # Creating Driver_Age
         if 'date_birth' in df_processed.columns:
             df_processed['driver_age'] = (datetime.now() - pd.to_datetime(df_processed['date_birth'], errors='coerce')).dt.days / 365.25
             df_processed = df_processed[(df_processed['driver_age'] >= 18) & (df_processed['driver_age'] <= 90)]
         
-        # Create Vehicle_Age
+        # Creating Vehicle_Age
         if 'year_matriculation' in df_processed.columns:
             current_year = datetime.now().year
             df_processed['vehicle_age'] = current_year - pd.to_numeric(df_processed['year_matriculation'], errors='coerce')
             df_processed = df_processed[df_processed['vehicle_age'] >= 0]
 
-        # Create Driving_Experience
+        # Creating Driving_Experience
         if 'date_driving_licence' in df_processed.columns:
             df_processed['driving_experience'] = (datetime.now() - pd.to_datetime(df_processed['date_driving_licence'], errors='coerce')).dt.days / 365.25
             df_processed = df_processed[df_processed['driving_experience'] >= 0]
         
         print(f"Shape after feature creation: {df_processed.shape}")
 
-        # --- 2. Define Features (X) and Target (y) ---
+
         if target_column not in df_processed.columns:
             print(f"Error: Target column '{target_column}' not found.")
             return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series(), None, []
@@ -66,7 +65,6 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         
         X = df_processed.drop(columns=[col for col in cols_to_drop if col in df_processed.columns], errors='ignore')
         
-        # --- 3. Identify Feature Types ---
         categorical_features = [
             'distribution_channel', 'payment', 'type_risk', 
             'area', 'second_driver', 'n_doors', 'type_fuel'
@@ -76,12 +74,12 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
 
         print(f"Using {len(X.columns)} predictor columns.")
 
-        # --- 4. Split Data ---
+        # Splitting the data
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=test_size, random_state=random_state
         )
 
-        # --- 5. Create Preprocessing Pipelines ---
+
         numerical_pipeline = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='median')),
             ('scaler', StandardScaler())
@@ -91,7 +89,6 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
             ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
         ])
 
-        # --- 6. Combine Pipelines with ColumnTransformer ---
         preprocessor = ColumnTransformer(
             transformers=[
                 ('num', numerical_pipeline, numerical_features),
@@ -100,10 +97,9 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
             remainder='passthrough'
         )
 
-        # --- 7. Apply Pipeline to Data ---
         print("Applying preprocessing pipeline (imputing, scaling, encoding)...")
         
-        # Fit the preprocessor *only* on the training data
+        # only the training data
         X_train_processed = preprocessor.fit_transform(X_train)
         X_test_processed = preprocessor.transform(X_test)
         
@@ -122,8 +118,7 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         
         print("✅ Preprocessing complete.")
         
-        # --- THIS IS THE CHANGE ---
-        # Return the fitted preprocessor and feature names
+      
         return X_train_final, X_test_final, y_train, y_test, preprocessor, all_feature_names
 
     except Exception as e:
