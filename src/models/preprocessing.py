@@ -25,9 +25,14 @@ except ImportError:
 def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size: float = 0.2, random_state: int = 42):
     """
     Performs full data preprocessing for modeling.
-    ... (rest of the docstring) ...
+    - Cleans data
+    - Creates features (e.g., ages)
+    - Handles missing values (imputation)
+    - Encodes categorical variables
+    - Scales numerical variables
+    - Splits data into training and testing sets
     
-    Returns: (X_train_final, X_test_final, y_train, y_test) on success, or (pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series()) on failure.
+    Returns: (X_train_final, X_test_final, y_train, y_test, preprocessor, all_feature_names) on success
     """
     try:
         print(f"Starting preprocessing. Original shape: {df.shape}")
@@ -39,7 +44,6 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         if 'date_birth' in df_processed.columns:
             df_processed['driver_age'] = (datetime.now() - pd.to_datetime(df_processed['date_birth'], errors='coerce')).dt.days / 365.25
             df_processed = df_processed[(df_processed['driver_age'] >= 18) & (df_processed['driver_age'] <= 90)]
-            print(f"Filtered by driver age. New shape: {df_processed.shape}")
         
         # Create Vehicle_Age
         if 'year_matriculation' in df_processed.columns:
@@ -55,24 +59,22 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         print(f"Shape after feature creation: {df_processed.shape}")
 
         # --- 2. Define Features (X) and Target (y) ---
-        
         if target_column not in df_processed.columns:
             print(f"Error: Target column '{target_column}' not found.")
-            return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series()
+            return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series(), None, []
         y = df_processed[target_column]
 
+        # Define ALL columns to drop from the feature set (X)
         cols_to_drop = [
             'id', 'date_start_contract', 'date_last_renewal', 
             'date_next_renewal', 'date_birth', 'date_driving_licence', 'date_lapse',
             'year_matriculation',
             'premium', 'n_claims_year', 'cost_claims_year', 
-            'n_claims_history', 'r_claims_history'
+            'n_claims_history', 'r_claims_history', 'lapse'
         ]
         
-        X = df_processed.drop(columns=[col for col in cols_to_drop if col in df_processed.columns and col != target_column], errors='ignore')
-        if target_column in X.columns:
-             X = X.drop(columns=[target_column], errors='ignore')
-
+        X = df_processed.drop(columns=[col for col in cols_to_drop if col in df_processed.columns], errors='ignore')
+        
         # --- 3. Identify Feature Types ---
         categorical_features = [
             'distribution_channel', 'payment', 'type_risk', 
@@ -81,9 +83,7 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         categorical_features = [col for col in categorical_features if col in X.columns]
         numerical_features = [col for col in X.columns if col not in categorical_features]
 
-        print(f"Using {len(X.columns)} predictor columns:")
-        print(f"  Numerical: {numerical_features}")
-        print(f"  Categorical: {categorical_features}")
+        print(f"Using {len(X.columns)} predictor columns.")
 
         # --- 4. Split Data ---
         X_train, X_test, y_train, y_test = train_test_split(
@@ -95,7 +95,6 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
             ('imputer', SimpleImputer(strategy='median')),
             ('scaler', StandardScaler())
         ])
-
         categorical_pipeline = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='most_frequent')),
             ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
@@ -113,6 +112,7 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         # --- 7. Apply Pipeline to Data ---
         print("Applying preprocessing pipeline (imputing, scaling, encoding)...")
         
+        # Fit the preprocessor *only* on the training data
         X_train_processed = preprocessor.fit_transform(X_train)
         X_test_processed = preprocessor.transform(X_test)
         
@@ -124,18 +124,18 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         all_feature_names = numerical_features + list(ohe_feature_names)
         
         if X_train_processed.shape[1] != len(all_feature_names):
-            raise ValueError(f"Shape mismatch: Processed data has {X_train_processed.shape[1]} columns, but we found {len(all_feature_names)} names.")
+            raise ValueError("Shape mismatch after preprocessing.")
 
         X_train_final = pd.DataFrame(X_train_processed, columns=all_feature_names, index=X_train.index)
         X_test_final = pd.DataFrame(X_test_processed, columns=all_feature_names, index=X_test.index)
         
         print("✅ Preprocessing complete.")
         
-        # --- THIS IS THE CHANGE ---
-        # Return all four sets of data
-        return X_train_final, X_test_final, y_train, y_test
+        # --- THIS IS THE CORRECTED RETURN STATEMENT ---
+        # It now returns all 6 items
+        return X_train_final, X_test_final, y_train, y_test, preprocessor, all_feature_names
 
     except Exception as e:
         print(f"Error during preprocessing: {e}")
         # Return empty objects to prevent 'NoneType' error
-        return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series()
+        return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series(), None, []
