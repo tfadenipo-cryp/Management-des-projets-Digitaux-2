@@ -83,7 +83,7 @@ def show_client_page(df: pd.DataFrame) -> None:
         st.session_state.page = "home"
         st.rerun()
         
-    st.title("👤 Client Area")
+    st.title("Client Area")
     
     menu = st.selectbox(
         "Choose an analysis:",
