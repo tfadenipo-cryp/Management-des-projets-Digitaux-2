@@ -5,12 +5,12 @@ import pandas as pd
 def search_by_power(df: pd.DataFrame) -> None:
     """Displays the average claim cost by vehicle power."""
 
-    st.subheader("⚙️ Claim Cost by Vehicle Power")
+    st.subheader("Claim Cost by Vehicle Power")
     st.markdown("This section displays the **average annual claim cost** depending on the vehicle's horsepower.")
 
     required_cols = ["power", "cost_claims_year"]
     if not all(col in df.columns for col in required_cols):
-        st.warning(f"⚠️ Missing required columns: {required_cols}")
+        st.warning(f"Missing required columns: {required_cols}")
         st.write("Available columns:", df.columns.tolist())
         return
 
@@ -20,7 +20,7 @@ def search_by_power(df: pd.DataFrame) -> None:
     df = df.dropna(subset=["power", "cost_claims_year"])
 
     if df.empty:
-        st.warning("⚠️ Not enough valid data for this analysis.")
+        st.warning("Not enough valid data for this analysis.")
         return
 
     # Dropdown for power selection (convert to int to remove decimals)

@@ -10,7 +10,7 @@ def bivariate_analysis(df: pd.DataFrame) -> None:
     Displays relationships between vehicle and driver attributes and the premium.
     """
 
-    st.subheader("💰 Premium Analysis")
+    st.subheader("Premium Analysis")
     st.markdown("""
     Explore how **vehicle value**, **age**, **driver demographics**, and **area type**
     influence insurance premiums.

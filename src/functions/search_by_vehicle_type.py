@@ -5,12 +5,12 @@ import pandas as pd
 def search_by_vehicle_type(df: pd.DataFrame) -> None:
     """Displays the average claim cost by vehicle type."""
 
-    st.subheader("🚘 Claim Cost by Vehicle Type")
+    st.subheader("Claim Cost by Vehicle Type")
     st.markdown("This section shows the **average annual claim cost** depending on the vehicle category.")
 
     required_cols = ["type_risk", "cost_claims_year"]
     if not all(col in df.columns for col in required_cols):
-        st.warning(f"⚠️ Missing required columns: {required_cols}")
+        st.warning(f"Missing required columns: {required_cols}")
         st.write("Available columns:", df.columns.tolist())
         return
 
@@ -26,7 +26,7 @@ def search_by_vehicle_type(df: pd.DataFrame) -> None:
     df = df.dropna(subset=["type_risk", "cost_claims_year"])
 
     if df.empty:
-        st.warning("⚠️ Not enough valid data for this analysis.")
+        st.warning("Not enough valid data for this analysis.")
         return
 
     df["vehicle_type"] = df["type_risk"].map(vehicle_type_map)

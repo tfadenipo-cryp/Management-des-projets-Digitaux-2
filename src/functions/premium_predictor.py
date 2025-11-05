@@ -66,7 +66,7 @@ def premium_predictor() -> None:
     preprocessor, model, expected_features = load_premium_models()
 
     # UI Title
-    st.title("💰 Premium Price Predictor")
+    st.title("Premium Price Predictor")
     st.markdown("Enter the details below to get an estimated yearly insurance premium.")
 
     if not all([preprocessor, model, expected_features]):

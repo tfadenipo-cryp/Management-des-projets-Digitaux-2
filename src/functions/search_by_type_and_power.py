@@ -5,12 +5,12 @@ import pandas as pd
 def search_by_type_and_power(df: pd.DataFrame) -> None:
     """Displays the average claim cost by both vehicle type and power."""
 
-    st.subheader("🔧 Claim Cost by Vehicle Type and Power")
+    st.subheader("Claim Cost by Vehicle Type and Power")
     st.markdown("This section combines **vehicle type** and **power** to analyze claim cost variations.")
 
     required_cols = ["type_risk", "power", "cost_claims_year"]
     if not all(col in df.columns for col in required_cols):
-        st.warning(f"⚠️ Missing required columns: {required_cols}")
+        st.warning(f"Missing required columns: {required_cols}")
         st.write("Available columns:", df.columns.tolist())
         return
 
@@ -27,7 +27,7 @@ def search_by_type_and_power(df: pd.DataFrame) -> None:
     df = df.dropna(subset=["type_risk", "power", "cost_claims_year"])
 
     if df.empty:
-        st.warning("⚠️ Not enough valid data for this analysis.")
+        st.warning("Not enough valid data for this analysis.")
         return
 
     df["vehicle_type"] = df["type_risk"].map(vehicle_type_map)
@@ -43,7 +43,7 @@ def search_by_type_and_power(df: pd.DataFrame) -> None:
     filtered_df = df[(df["vehicle_type"] == selected_type) & (df["power"] == selected_power)]
 
     if filtered_df.empty:
-        st.warning("⚠️ No available records for this combination.")
+        st.warning("No available records for this combination.")
         return
 
     avg_cost = filtered_df["cost_claims_year"].mean()

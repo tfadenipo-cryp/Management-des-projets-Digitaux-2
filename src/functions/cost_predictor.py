@@ -1,6 +1,6 @@
 """
-Streamlit Page: Probability Predictor (for Insurer/Décideur)
-(Nom de fichier conservé : cost_predictor.py pour la compatibilité des imports)
+Streamlit Page: Probability Predictor (for Insurer)
+(Filename cost_predictor.py is kept for import compatibility)
 """
 from __future__ import annotations
 
@@ -20,8 +20,8 @@ MODELS_DIR = ROOT_DIR / "models"
 SRC_DIR = ROOT_DIR / "src"
 
 # --- Artifact Stems ---
-# Nous chargeons les fichiers "cost" qui contiennent maintenant
-# le modèle de PROBABILITÉ
+# We load the "cost" files which now contain
+# the PROBABILITY model
 MODEL_STEM = "cost_model"
 PREPROCESSOR_STEM = "cost_preprocessor"
 FEATURES_STEM = "cost_model_features"
@@ -76,59 +76,60 @@ def cost_predictor() -> None:
     """
     preprocessor, model, expected_features = load_cost_models()
 
-    # --- CORRECTION : Titre mis à jour ---
-    st.title("⚖️ Prédicteur de Probabilité de Sinistre")
+    # --- CORRECTION: Title updated ---
+    st.title("Claim Probability Predictor")
     st.markdown(
-        "Estimez la **probabilité qu'un profil ait un sinistre** au cours de l'année."
+        "Estimate the **probability that a profile will have a claim** during the year."
     )
 
     if not all([preprocessor, model, expected_features]):
         st.warning(
-            "⚠️ Un ou plusieurs artefacts de modèle sont manquants."
-            "Veuillez exécuter `uv run python src/models/final_model_cost.py`"
+            "⚠️ One or more model artifacts are missing."
+            "Please run `uv run python src/models/final_model_cost.py`"
         )
         return
 
     # --- Prediction Form ---
     with st.form("prediction_form_cost"):
-        st.subheader("Véhicule")
+        st.subheader("Vehicle")
         col1, col2 = st.columns(2)
         with col1:
-            value_vehicle = st.number_input("Valeur du véhicule (€)", 500, 100000, 20000)
-            vehicle_age = st.slider("Âge du véhicule (années)", 0, 40, 5)
+            value_vehicle = st.number_input("Vehicle Value (€)", 500, 100000, 20000)
+            vehicle_age = st.slider("Vehicle Age (years)", 0, 40, 5)
             type_risk = st.selectbox(
-                "Type de véhicule",
+                "Vehicle Type",
                 [1, 2, 3, 4],
                 format_func=lambda x: {
-                    1: "Moto", 2: "Camionnette", 3: "Voiture", 4: "Agricole"
+                    1: "Motorcycle", 2: "Van", 3: "Car", 4: "Agricultural"
                 }[x],
             )
         with col2:
-            power = st.number_input("Puissance (ch)", 40, 500, 110)
+            power = st.number_input("Power (hp)", 40, 500, 110)
             type_fuel = st.selectbox(
-                "Carburant",
+                "Fuel Type",
                 [1, 2, 0],
-                format_func=lambda x: {1: "Essence", 2: "Diesel", 0: "Autre"}[x],
+                format_func=lambda x: {1: "Gasoline", 2: "Diesel", 0: "Other"}[x],
             )
-            n_doors = st.selectbox("Nombre de portes", [0, 2, 3, 4, 5, 6])
+            n_doors = st.selectbox("Number of Doors", [0, 2, 3, 4, 5, 6])
 
-        st.subheader("Conducteur / Contrat")
+        st.subheader("Driver / Contract")
         col3, col4 = st.columns(2)
         with col3:
-            driver_age = st.slider("Âge du conducteur", 18, 90, 35)
-            driving_experience = st.slider("Années d'expérience", 0, 72, 15)
-            area = st.radio("Zone", [0, 1], format_func=lambda x: {0: "Rurale", 1: "Urbaine"}[x])
+            driver_age = st.slider("Driver Age", 18, 90, 35)
+            driving_experience = st.slider("Years of Experience", 0, 72, 15)
+            area = st.radio("Area", [0, 1], format_func=lambda x: {0: "Rural", 1: "Urban"}[x])
         with col4:
-            seniority = st.slider("Ancienneté (années)", 0, 50, 3)
-            lapse = st.radio("Contrat déjà résilié ?", [0, 1], format_func=lambda x: {0: "Non", 1: "Oui"}[x])
-            second_driver = st.radio("Second conducteur ?", [0, 1], format_func=lambda x: {0: "Non", 1: "Oui"}[x])
+            seniority = st.slider("Seniority (years)", 0, 50, 3)
+            lapse = st.radio("Contract previously terminated?", [0, 1], format_func=lambda x: {0: "No", 1: "Yes"}[x])
+            second_driver = st.radio("Second driver?", [0, 1], format_func=lambda x: {0: "No", 1: "Yes"}[x])
 
-        submit = st.form_submit_button("Estimer la Probabilité de Risque")
+        submit = st.form_submit_button("Estimate Risk Probability")
 
     if not submit:
         return
 
     # --- Build Input DataFrame ---
+    # These values are placeholders for features not in the form
     df = pd.DataFrame({
         "value_vehicle": [value_vehicle],
         "vehicle_age": [vehicle_age],
@@ -142,14 +143,14 @@ def cost_predictor() -> None:
         "seniority": [seniority],
         "lapse": [lapse],
         "second_driver": [second_driver],
-        "policies_in_force": [1],
-        "max_policies": [1],
-        "max_products": [1],
-        "cylinder_capacity": [1600],
-        "length": [4.5],
-        "weight": [1300],
-        "distribution_channel": [0],
-        "payment": [0],
+        "policies_in_force": [1], # Placeholder
+        "max_policies": [1],      # Placeholder
+        "max_products": [1],      # Placeholder
+        "cylinder_capacity": [1600], # Placeholder
+        "length": [4.5],          # Placeholder
+        "weight": [1300],         # Placeholder
+        "distribution_channel": [0], # Placeholder
+        "payment": [0],           # Placeholder
     })
 
     # --- Preprocess ---
@@ -164,6 +165,7 @@ def cost_predictor() -> None:
     X_df = pd.DataFrame(X_processed, columns=all_processed_features)
     X_df_sm = sm.add_constant(X_df, prepend=True, has_constant="add")
 
+    # Align columns with the model's expected features
     X_final = pd.DataFrame(columns=expected_features, index=[0]).fillna(0.0)
     
     for col in X_final.columns:
@@ -175,14 +177,14 @@ def cost_predictor() -> None:
         probability = model.predict(X_final)
         prob_percent = probability[0] * 100
 
-        st.success(f"## ✅ Probabilité de sinistre : {prob_percent:,.1f} %")
+        st.success(f"## ✅ Claim Probability: {prob_percent:,.1f} %")
         
         if prob_percent < 15:
-            st.info("Risque faible")
+            st.info("Low Risk")
         elif prob_percent < 30:
-            st.warning("Risque modéré")
+            st.warning("Moderate Risk")
         else:
-            st.error("Risque élevé")
+            st.error("High Risk")
 
     except Exception as e:
-        st.error(f"Erreur lors de la prédiction : {e}")
+        st.error(f"Error during prediction: {e}")
