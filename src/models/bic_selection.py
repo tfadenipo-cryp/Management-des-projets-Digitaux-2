@@ -27,7 +27,7 @@ try:
     from src.functions.engineering import engineering
     from src.models.preprocessing import preprocess_data_for_modeling
 except ImportError as e:
-    print(f"Error: Could not import necessary modules. Make sure all __init__.py files are present.")
+    print("Error: Could not import necessary modules. Make sure all __init__.py files are present.")
     print(f"Details: {e}")
     sys.exit(1)
 
@@ -77,7 +77,7 @@ def perform_bic_selection(X, y):
                     feature_to_add = feature
                     best_model_results_this_step = results
                     
-            except Exception as e:
+            except Exception:
                 continue
         
         if feature_to_add:

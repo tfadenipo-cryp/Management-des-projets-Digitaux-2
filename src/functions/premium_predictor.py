@@ -6,7 +6,6 @@ from __future__ import annotations
 from pathlib import Path
 import json
 import joblib
-import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import streamlit as st

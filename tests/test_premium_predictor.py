@@ -8,7 +8,7 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import premium_predictor, premium_predictor_module  # fn + module
+from functions import premium_predictor  # fn + module
 
 
 def test_premium_predictor_executes(monkeypatch):
