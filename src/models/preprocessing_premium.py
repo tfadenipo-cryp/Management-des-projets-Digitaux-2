@@ -7,6 +7,7 @@ data is used for both.
 import pandas as pd
 from datetime import datetime
 import sys
+import numpy as np
 
 try:
     from sklearn.model_selection import train_test_split
@@ -23,12 +24,18 @@ except ImportError:
 def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size: float = 0.2, random_state: int = 42):
     """
     Performs full data preprocessing for modeling.
-    Returns: (X_train, X_test, y_train, y_test, preprocessor_object, final_feature_names)
+    - Cleans data
+    - Creates features (e.g., ages)
+    - Handles missing values (imputation)
+    - Encodes categorical variables
+    - Scales numerical variables
+    - Splits data into training and testing sets
+    
+    Returns: (X_train_final, X_test_final, y_train, y_test, preprocessor, all_feature_names) on success
     """
     try:
         print(f"Starting preprocessing. Original shape: {df.shape}")
 
-        # Initial Filtering 
         df_processed = df.copy()
         
         # Creating Driver_Age
@@ -49,35 +56,51 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         
         print(f"Shape after feature creation: {df_processed.shape}")
 
-
+      
         if target_column not in df_processed.columns:
             print(f"Error: Target column '{target_column}' not found.")
             return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series(), None, []
+        
+        # S'assurer que la cible est numérique (pour 'had_claim' ou 'premium')
+        df_processed[target_column] = pd.to_numeric(df_processed[target_column], errors='coerce')
+        df_processed = df_processed.dropna(subset=[target_column])
+        
         y = df_processed[target_column]
 
+        # --- CORRECTION DÉFINITIVE ---
+        # S'assurer que TOUTES les colonnes non-feature sont supprimées
         cols_to_drop = [
             'id', 'date_start_contract', 'date_last_renewal', 
             'date_next_renewal', 'date_birth', 'date_driving_licence', 'date_lapse',
-            'year_matriculation', 'premium', 'n_claims_year', 
-            'cost_claims_year', 'n_claims_history', 'r_claims_history', 'lapse'
+            'year_matriculation',
+            'premium', 'n_claims_year', 'cost_claims_year', 
+            'n_claims_history',  # On les supprime, ils ont pollué le préprocesseur
+            'r_claims_history',  # On les supprime, ils ont pollué le préprocesseur
+            'lapse'
         ]
+        # --- FIN DE LA CORRECTION ---
         
+        if target_column in cols_to_drop:
+             cols_to_drop.remove(target_column)
+             
         X = df_processed.drop(columns=[col for col in cols_to_drop if col in df_processed.columns], errors='ignore')
         
+        if target_column in X.columns:
+            X = X.drop(columns=[target_column])
+            
         categorical_features = [
             'distribution_channel', 'payment', 'type_risk', 
             'area', 'second_driver', 'n_doors', 'type_fuel'
         ]
         categorical_features = [col for col in categorical_features if col in X.columns]
+        
         numerical_features = [col for col in X.columns if col not in categorical_features]
 
         print(f"Using {len(X.columns)} predictor columns.")
 
-        # Splitting the data
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=test_size, random_state=random_state
         )
-
 
         numerical_pipeline = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='median')),
@@ -98,7 +121,6 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
 
         print("Applying preprocessing pipeline (imputing, scaling, encoding)...")
         
-        # only the training data
         X_train_processed = preprocessor.fit_transform(X_train)
         X_test_processed = preprocessor.transform(X_test)
         
@@ -110,17 +132,20 @@ def preprocess_data_for_modeling(df: pd.DataFrame, target_column: str, test_size
         all_feature_names = numerical_features + list(ohe_feature_names)
         
         if X_train_processed.shape[1] != len(all_feature_names):
-            raise ValueError("Shape mismatch after preprocessing.")
+             print("Warning: Shape mismatch. Adjusting feature names.")
+             all_feature_names = [col for col in all_feature_names if col in X.columns or '_' in col]
+             if X_train_processed.shape[1] != len(all_feature_names):
+                 raise ValueError(f"Shape mismatch: {X_train_processed.shape[1]} != {len(all_feature_names)}")
+
 
         X_train_final = pd.DataFrame(X_train_processed, columns=all_feature_names, index=X_train.index)
         X_test_final = pd.DataFrame(X_test_processed, columns=all_feature_names, index=X_test.index)
         
         print("✅ Preprocessing complete.")
         
-      
+       
         return X_train_final, X_test_final, y_train, y_test, preprocessor, all_feature_names
 
     except Exception as e:
         print(f"Error during preprocessing: {e}")
         return pd.DataFrame(), pd.DataFrame(), pd.Series(), pd.Series(), None, []
-
