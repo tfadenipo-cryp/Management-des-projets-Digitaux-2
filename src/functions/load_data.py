@@ -15,7 +15,7 @@ def load_data() -> pd.DataFrame:
     try:
         data = engineering()
     except FileNotFoundError:
-        st.error(f"❌ File not found: the data are maybe delated ")
+        st.error("❌ File not found: the data are maybe delated ")
         return pd.DataFrame()
     except Exception as e:
         st.error(f"⚠️ Error while loading data: {e}")

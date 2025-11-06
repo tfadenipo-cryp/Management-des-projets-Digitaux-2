@@ -1,4 +1,3 @@
-from pathlib import Path
 import pandas as pd
 from functions import load_data  # ✅ imported from src/functions/__init__.py
 
