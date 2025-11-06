@@ -8,10 +8,9 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-# --- CORRECTION ---
-# Importer la fonction DEPUIS son fichier
-from functions.premium_predictor import premium_predictor  # noqa: E402
-# --- FIN CORRECTION ---
+# --- CORRECTION 1 : Importer le MODULE (le fichier) pour éviter le conflit de noms ---
+from functions import premium_predictor as premium_predictor_module  # noqa: E402
+# --- FIN CORRECTION 1 ---
 
 
 def test_premium_predictor_executes(monkeypatch):
@@ -30,25 +29,18 @@ def test_premium_predictor_executes(monkeypatch):
     monkeypatch.setattr(st, "radio", lambda *a, **k: 0)
     monkeypatch.setattr(st, "form_submit_button", lambda *a, **k: True)
 
-    # mock du loader DANS LE MODULE
+    # --- CORRECTION 2 : Le chemin de patching est maintenant non-ambigu ---
+    # Nous patchons "load_premium_models" à l'intérieur du module
     monkeypatch.setattr(
-        "functions.premium_predictor.load_premium_models",
-        # Mock pour renvoyer les 3 objets (preprocessor, model, features)
+        premium_predictor_module, "load_premium_models",
         lambda: (DummyPreprocessor(), DummyModel(), ["const", "num_feature"])
     )
-    
-    # Suppression des mocks inutiles qui cassaient
-    # monkeypatch.setattr(
-    #     "functions.premium_predictor_module.sm.load",
-    #     lambda *a, **k: DummyModel()
-    # )
-    # monkeypatch.setattr(
-    #     "functions.premium_predictor_module.open",
-    #     lambda *a, **k: DummyFeaturesFile(), raising=False
-    # )
+    # --- FIN CORRECTION 2 ---
 
     try:
-        premium_predictor()
+        # --- CORRECTION 3 : Appeler la fonction depuis le module importé ---
+        premium_predictor_module.premium_predictor()
+        # --- FIN CORRECTION 3 ---
     except Exception as e:
         pytest.fail(f"premium_predictor raised an exception: {e}")
 
@@ -61,6 +53,7 @@ class DummyCtx:
 class DummyPreprocessor:
     def transform(self, df):
         import numpy as np
+        # retourne un array avec une seule colonne pour simplifier
         return np.zeros((len(df), 1))
 
     @property
@@ -80,12 +73,3 @@ class DummyPreprocessor:
 class DummyModel:
     def predict(self, X):
         return [1234.56]
-
-
-class DummyFeaturesFile:
-    def __enter__(self): 
-        from io import StringIO
-        self.buf = StringIO('["const","num_feature"]')
-        return self.buf
-    def __exit__(self, *a): 
-        self.buf.close()
