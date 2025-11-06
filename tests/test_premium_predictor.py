@@ -8,7 +8,10 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import premium_predictor  # fn + module
+# --- CORRECTION ---
+# Importer la fonction DEPUIS son fichier
+from functions.premium_predictor import premium_predictor  # noqa: E402
+# --- FIN CORRECTION ---
 
 
 def test_premium_predictor_executes(monkeypatch):
@@ -29,17 +32,20 @@ def test_premium_predictor_executes(monkeypatch):
 
     # mock du loader DANS LE MODULE
     monkeypatch.setattr(
-        "functions.premium_predictor_module.joblib.load",
-        lambda *a, **k: DummyPreprocessor()
+        "functions.premium_predictor.load_premium_models",
+        # Mock pour renvoyer les 3 objets (preprocessor, model, features)
+        lambda: (DummyPreprocessor(), DummyModel(), ["const", "num_feature"])
     )
-    monkeypatch.setattr(
-        "functions.premium_predictor_module.sm.load",
-        lambda *a, **k: DummyModel()
-    )
-    monkeypatch.setattr(
-        "functions.premium_predictor_module.open",
-        lambda *a, **k: DummyFeaturesFile(), raising=False
-    )
+    
+    # Suppression des mocks inutiles qui cassaient
+    # monkeypatch.setattr(
+    #     "functions.premium_predictor_module.sm.load",
+    #     lambda *a, **k: DummyModel()
+    # )
+    # monkeypatch.setattr(
+    #     "functions.premium_predictor_module.open",
+    #     lambda *a, **k: DummyFeaturesFile(), raising=False
+    # )
 
     try:
         premium_predictor()
@@ -55,7 +61,6 @@ class DummyCtx:
 class DummyPreprocessor:
     def transform(self, df):
         import numpy as np
-        # retourne un array avec une seule colonne pour simplifier
         return np.zeros((len(df), 1))
 
     @property

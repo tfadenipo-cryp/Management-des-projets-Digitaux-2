@@ -142,4 +142,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-y_pred = np.expm1(model.predict(X_scaled))
