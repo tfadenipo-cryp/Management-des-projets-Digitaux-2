@@ -6,6 +6,9 @@ import statsmodels.api as sm
 import streamlit as st
 import numpy as np
 
+pd.set_option('future.no_silent_downcasting', True)
+
+
 ROOT_DIR = Path(__file__).resolve().parents[2]
 MODELS_DIR = ROOT_DIR / "models"
 PREPROCESSOR_PATH = MODELS_DIR / "premium_preprocessor.joblib"
