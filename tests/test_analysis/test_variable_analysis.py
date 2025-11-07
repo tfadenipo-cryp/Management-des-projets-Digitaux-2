@@ -11,7 +11,7 @@ import pandas as pd
 import pytest
 
 # Import directly from package (no sys.path modification)
-from src.functions.variable_analysis import variable_analysis
+from src.trustagence.analysis.variable_analysis import variable_analysis
 
 
 @pytest.fixture

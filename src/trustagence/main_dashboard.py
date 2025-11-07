@@ -3,37 +3,26 @@ Main Dashboard Router
 Handles navigation between Client and Insurer sections.
 """
 
-from __future__ import annotations
-
-import sys
-from pathlib import Path
+# from __future__ import annotations
 
 import streamlit as st
 import textwrap
-import pandas as pd  # Necessary to pass df to functions
+import pandas as pd  # Necessary to pass df to src.trustagence.analysis
 
-# --- Project root → ensure imports work ---
-HERE = Path(__file__).resolve()
-ROOT_DIR = HERE.parents[2]
-SRC_DIR = ROOT_DIR / "src"
+from trustagence.analysis.search_by_power import search_by_power
+from trustagence.engineering.load_data import load_data
+from trustagence.analysis.search_by_vehicle_type import search_by_vehicle_type
+from trustagence.analysis.search_by_type_and_power import search_by_type_and_power
+from trustagence.analysis.variable_analysis import variable_analysis
+from trustagence.analysis.bivariate_analysis import bivariate_analysis
+from trustagence.model.premium_predictor import premium_predictor
+from trustagence.model.cost_predictor import cost_predictor  # The filename is the same
 
-if str(SRC_DIR) not in sys.path:
-    sys.path.append(str(SRC_DIR))
-# --- End of sys.path modification ---
 
-# Import all page functions
-try:
-    from functions.load_data import load_data
-    from functions.search_by_power import search_by_power
-    from functions.search_by_vehicle_type import search_by_vehicle_type
-    from functions.search_by_type_and_power import search_by_type_and_power
-    from functions.variable_analysis import variable_analysis
-    from functions.bivariate_analysis import bivariate_analysis
-    from functions.premium_predictor import premium_predictor
-    from functions.cost_predictor import cost_predictor  # The filename is the same
-except ImportError as e:
-    st.error(f"Import error: {e}")
-    st.stop()
+# Import all page src.trustagence.analysis
+
+
+# functions
 
 
 def show_home_page() -> None:
@@ -142,7 +131,7 @@ def show_insurer_page(df: pd.DataFrame) -> None:
     #    st.info("Coming soon.")
 
 
-def main() -> None:
+def run_dashboard() -> None:
     """Main Streamlit app router."""
 
     st.set_page_config(page_title="Insurance Dashboard", layout="wide")
@@ -168,7 +157,3 @@ def main() -> None:
         # Default fallback to home
         st.session_state.page = "home"
         st.rerun()
-
-
-if __name__ == "__main__":
-    main()

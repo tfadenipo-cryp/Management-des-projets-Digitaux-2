@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from .engineering import engineering
+from trustagence.engineering.engineering import engineering
 
 
 @st.cache_data

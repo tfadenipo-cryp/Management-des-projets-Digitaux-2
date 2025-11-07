@@ -11,7 +11,7 @@ import pandas as pd
 import pytest
 
 # Import directly from package (no sys.path modifications)
-from src.functions.search_by_power import search_by_power
+from src.trustagence.analysis.search_by_power import search_by_power
 
 
 @pytest.fixture

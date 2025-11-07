@@ -1,4 +1,7 @@
-from src.functions.premium_predictor import load_premium_models, premium_predictor
+from src.trustagence.model.premium_predictor import (
+    load_premium_models,
+    premium_predictor,
+)
 
 
 def test_load_premium_models_basic():

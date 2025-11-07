@@ -9,7 +9,7 @@ import pandas as pd
 import pytest
 
 # Import directly from the package (no sys.path hacks)
-from src.functions.bivariate_analysis import bivariate_analysis
+from src.trustagence.analysis.bivariate_analysis import bivariate_analysis
 
 
 @pytest.fixture

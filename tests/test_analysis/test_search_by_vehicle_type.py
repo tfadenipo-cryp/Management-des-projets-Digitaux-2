@@ -11,7 +11,7 @@ import pandas as pd
 import pytest
 
 # Import directly from package (no sys.path manipulation)
-from src.functions.search_by_vehicle_type import search_by_vehicle_type
+from src.trustagence.analysis.search_by_vehicle_type import search_by_vehicle_type
 
 
 @pytest.fixture

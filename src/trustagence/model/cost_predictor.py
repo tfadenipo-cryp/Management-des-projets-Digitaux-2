@@ -14,7 +14,7 @@ import streamlit as st
 
 # --- Project paths ---
 HERE = Path(__file__).resolve()
-ROOT_DIR = HERE.parents[2]
+ROOT_DIR = HERE.parents[3]
 MODELS_DIR = ROOT_DIR / "models"
 SRC_DIR = ROOT_DIR / "src"
 

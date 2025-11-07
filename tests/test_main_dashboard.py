@@ -9,7 +9,7 @@ from __future__ import annotations
 import pytest
 
 # Import directly from package structure (no sys.path hacks)
-from src.functions.main_dashboard import main as main_dashboard
+from src.trustagence.main_dashboard import run_dashboard as main_dashboard
 
 
 def test_main_dashboard_runs(monkeypatch: pytest.MonkeyPatch) -> None:
