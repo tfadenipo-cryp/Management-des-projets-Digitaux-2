@@ -6,7 +6,8 @@ Comments and docstrings are in English and follow standard Python style.
 """
 
 from __future__ import annotations
-from src.functions.premium_predictor import premium_predictor
+from src.functions.premium_predictor import premium_predictor as premium_predictor
+from src.functions.premium_predictor import load_premium_models as load_premium_models
 import src.functions.premium_predictor as _premium_module
 
 import pytest
