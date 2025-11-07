@@ -6,10 +6,12 @@ Comments and docstrings are in English and follow standard Python style.
 """
 
 from __future__ import annotations
-from src.functions.premium_predictor import premium_predictor as premium_predictor
+from src.functions.premium_predictor import premium_predictor
+import src.functions.premium_predictor as _premium_module
 
 import pytest
 import streamlit as st
+import numpy as np
 
 
 def test_premium_predictor_executes(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -66,10 +68,11 @@ def test_premium_predictor_executes(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(st, "sidebar", st, raising=False)  # reuse same API
 
     # ---- Model loader: patch the CORRECT dotted path -------------------------
-    # The function lives in module "src.functions.premium_predictor".
+    # Patch the attribute on the already-imported module object to avoid sys.modules aliasing issues
     monkeypatch.setattr(
-        "src.functions.premium_predictor.load_premium_models",
-        lambda: (DummyPreprocessor(), DummyModel(), ["const", "num_feature"]),  # tuple
+        _premium_module,
+        "load_premium_models",
+        lambda: (DummyPreprocessor(), DummyModel(), ["const", "num_feature"]),
     )
 
     # Execute and ensure no exception is raised
@@ -104,8 +107,6 @@ class DummyPreprocessor:
     """Fake preprocessor that returns a 1-column numeric design matrix."""
 
     def transform(self, df):  # type: ignore[no-untyped-def]
-        import numpy as np
-
         return np.zeros((len(df), 1))  # one numeric feature
 
     @property
