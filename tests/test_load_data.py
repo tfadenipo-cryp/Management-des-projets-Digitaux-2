@@ -1,4 +1,3 @@
-<<<<<<< tests/test_load_data.py
 """Tests for the `load_data` function.
 
 This module verifies that the data-loading utility returns a valid, non-empty
