@@ -173,4 +173,3 @@ The pipeline is defined in .gitlab-ci.yml
 - Rezi Sabashvilli: Data Scientist (Developer)
 - Idriss Jordan: Interface Designer (Developer)
 - Cherfatou Koudou kimba: Data Analyst (Developer)
-

@@ -1,25 +1,35 @@
-import sys
-from pathlib import Path
+"""Tests for the `main_dashboard` Streamlit page.
+
+This file provides a minimal smoke test ensuring the main dashboard page
+runs its setup without raising. Comments and docstrings follow PEP 257
+and the overall structure matches Python testing conventions.
+"""
+
+from __future__ import annotations
 import pytest
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
-SRC_DIR = ROOT_DIR / "src"
-if str(SRC_DIR) not in sys.path:
-    sys.path.append(str(SRC_DIR))
-
-from functions import main_dashboard # noqa: E402
+# Import directly from package structure (no sys.path hacks)
+from src.functions.main_dashboard import main as main_dashboard
 
 
-def test_main_dashboard_runs(monkeypatch):
-    """Ensure that the main dashboard executes at least its setup without errors."""
+def test_main_dashboard_runs(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Smoke test: ensure that `main_dashboard` executes without errors.
+
+    This test mocks key Streamlit methods typically called during page setup.
+    It does not check rendering but only verifies that no exceptions occur.
+    """
+
+    # Mock Streamlit UI calls (safe no-ops)
     monkeypatch.setattr("streamlit.set_page_config", lambda **kwargs: None)
-    monkeypatch.setattr("streamlit.title", lambda text: None)
-    monkeypatch.setattr("streamlit.markdown", lambda *args, **kwargs: None)
-    monkeypatch.setattr("streamlit.error", lambda *args, **kwargs: None)
-    monkeypatch.setattr("streamlit.divider", lambda: None)
-    monkeypatch.setattr("streamlit.subheader", lambda *args, **kwargs: None)
+    monkeypatch.setattr("streamlit.title", lambda *a, **k: None)
+    monkeypatch.setattr("streamlit.markdown", lambda *a, **k: None)
+    monkeypatch.setattr("streamlit.error", lambda *a, **k: None)
+    monkeypatch.setattr("streamlit.divider", lambda *a, **k: None)
+    monkeypatch.setattr("streamlit.subheader", lambda *a, **k: None)
+    monkeypatch.setattr("streamlit.warning", lambda *a, **k: None, raising=False)
+    monkeypatch.setattr("streamlit.success", lambda *a, **k: None, raising=False)
 
     try:
-        main_dashboard()
-    except Exception as e:
-        pytest.fail(f"main_dashboard raised an exception: {e}")
+        main_dashboard()  # execute Streamlit page setup
+    except Exception as exc:  # pragma: no cover - should not trigger
+        pytest.fail(f"main_dashboard raised an exception: {exc}")

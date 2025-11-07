@@ -1,29 +1,43 @@
-import pandas as pd
-from functions import load_data  # ✅ imported from src/functions/__init__.py
+"""Tests for the `load_data` function.
 
-def test_load_data_returns_dataframe():
-    """Test that load_data loads the dataset correctly and returns a valid DataFrame."""
-    
+This module verifies that the data-loading utility returns a valid, non-empty
+DataFrame with expected columns and proper data types.
+It follows PEP 8 and PEP 257 conventions.
+"""
+
+from __future__ import annotations
+
+import pandas as pd
+from src.functions import load_data
+
+
+def test_load_data_returns_dataframe() -> None:
+    """Smoke test: ensure `load_data` returns a valid non-empty DataFrame.
+
+    The test checks for correct type, presence of key columns, and numeric dtypes.
+    """
+
     df = load_data()
 
-    # Basic type check
-    assert isinstance(df, pd.DataFrame), "❌ load_data() should return a pandas DataFrame."
+    # ---- Basic type validation ----
+    assert isinstance(df, pd.DataFrame), "load_data() should return a pandas DataFrame."
 
-    # DataFrame not empty
+    # ---- Non-empty check ----
     assert not df.empty, (
-        "❌ The DataFrame is empty — check that 'data/processed/new_motor_vehicle_insurance_data.csv' exists "
-        "and that the separator (;) matches the file format."
+        "The DataFrame is empty — verify that 'data/processed/new_motor_vehicle_insurance_data.csv' exists "
+        "and that the delimiter ';' matches the file format."
     )
 
-    # Check column names
+    # ---- Required columns ----
     expected_cols = {"premium", "cost_claims_year", "power", "value_vehicle"}
     missing_cols = expected_cols - set(df.columns)
 
-    # If missing columns, show them in the error message
-    assert not missing_cols, f"⚠️ Missing required columns: {', '.join(missing_cols)}"
+    assert not missing_cols, f"Missing required columns: {', '.join(missing_cols)}"
 
-    # Optional: check that numeric columns are indeed numeric
+    # ---- Numeric column validation ----
     numeric_cols = ["premium", "cost_claims_year", "value_vehicle"]
     for col in numeric_cols:
         if col in df.columns:
-            assert pd.api.types.is_numeric_dtype(df[col]), f"⚠️ Column '{col}' should be numeric."
+            assert pd.api.types.is_numeric_dtype(
+                df[col]
+            ), f"Column '{col}' should contain numeric values."

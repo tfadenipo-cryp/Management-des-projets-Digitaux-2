@@ -46,6 +46,7 @@ except ModuleNotFoundError as e:
 #                          LAUNCH STREAMLIT
 # ======================================================================
 
+
 def main() -> None:
     """Entry point that launches the full Streamlit dashboard."""
     run_dashboard()
@@ -57,4 +58,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

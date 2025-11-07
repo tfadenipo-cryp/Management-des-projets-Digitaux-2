@@ -57,4 +57,3 @@ security-audit:
     # Génère un requirements.txt standard dans le dossier temporaire
     - python -m pip freeze > $env:TEMP\req.txt
     - python -m pip_audit -r $env:TEMP\req.txt
-

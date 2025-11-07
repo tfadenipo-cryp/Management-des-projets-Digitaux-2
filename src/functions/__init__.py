@@ -1,16 +1,13 @@
-"""
-functions package initializer
------------------------------
-Explicit exports for all Streamlit modules.
-"""
+from .load_data import load_data
+from .search_by_power import search_by_power
+from .search_by_vehicle_type import search_by_vehicle_type
+from .search_by_type_and_power import search_by_type_and_power
+from .variable_analysis import variable_analysis
+from .bivariate_analysis import bivariate_analysis
+from .main_dashboard import main as main_dashboard
 
-from functions.load_data import load_data as load_data
-from functions.search_by_power import search_by_power as search_by_power
-from functions.search_by_vehicle_type import search_by_vehicle_type as search_by_vehicle_type
-from functions.search_by_type_and_power import search_by_type_and_power as search_by_type_and_power
-from functions.variable_analysis import variable_analysis as variable_analysis
-from functions.bivariate_analysis import bivariate_analysis as bivariate_analysis
-from functions.main_dashboard import main as main_dashboard
+from . import premium_predictor as premium_predictor_module  # module
+from .premium_predictor import premium_predictor  # fonction
 
 __all__ = [
     "load_data",
@@ -20,5 +17,6 @@ __all__ = [
     "variable_analysis",
     "bivariate_analysis",
     "main_dashboard",
+    "premium_predictor_module",
+    "premium_predictor",
 ]
-
