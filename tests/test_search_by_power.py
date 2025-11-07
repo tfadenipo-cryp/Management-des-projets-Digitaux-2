@@ -8,15 +8,12 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import search_by_power # noqa: E402
+from functions import search_by_power  # noqa: E402
 
 
 @pytest.fixture
 def sample_df():
-    return pd.DataFrame({
-        "power": [50, 100, 150],
-        "cost_claims_year": [200, 400, 600]
-    })
+    return pd.DataFrame({"power": [50, 100, 150], "cost_claims_year": [200, 400, 600]})
 
 
 def test_search_by_power_executes(monkeypatch, sample_df):

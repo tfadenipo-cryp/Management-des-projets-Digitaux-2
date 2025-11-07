@@ -6,7 +6,9 @@ def search_by_vehicle_type(df: pd.DataFrame) -> None:
     """Displays the average claim cost by vehicle type."""
 
     st.subheader("Claim Cost by Vehicle Type")
-    st.markdown("This section shows the **average annual claim cost** depending on the vehicle category.")
+    st.markdown(
+        "This section shows the **average annual claim cost** depending on the vehicle category."
+    )
 
     required_cols = ["type_risk", "cost_claims_year"]
     if not all(col in df.columns for col in required_cols):

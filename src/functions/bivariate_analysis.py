@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px  #type: ignore
+import plotly.express as px  # type: ignore
 from datetime import datetime
 
 
@@ -67,7 +67,9 @@ def bivariate_analysis(df: pd.DataFrame) -> None:
             opacity=0.7,
             title="Vehicle Value vs Premium",
         )
-        fig.update_traces(marker=dict(size=5, line=dict(width=0.5, color="DarkSlateGrey")))
+        fig.update_traces(
+            marker=dict(size=5, line=dict(width=0.5, color="DarkSlateGrey"))
+        )
         fig.update_layout(template="plotly_white", title_font_color=colors[0])
         st.plotly_chart(fig, use_container_width=True)
 
@@ -103,8 +105,12 @@ def bivariate_analysis(df: pd.DataFrame) -> None:
             return
 
         clean_df = df.dropna(subset=["date_birth"])
-        clean_df["driver_age"] = (datetime.now() - clean_df["date_birth"]).dt.days / 365.25
-        clean_df = clean_df[(clean_df["driver_age"] >= 18) & (clean_df["driver_age"] <= 90)]
+        clean_df["driver_age"] = (
+            datetime.now() - clean_df["date_birth"]
+        ).dt.days / 365.25
+        clean_df = clean_df[
+            (clean_df["driver_age"] >= 18) & (clean_df["driver_age"] <= 90)
+        ]
 
         fig = px.scatter(
             clean_df,
@@ -127,7 +133,9 @@ def bivariate_analysis(df: pd.DataFrame) -> None:
             return
 
         clean_df = df.dropna(subset=["area"])
-        clean_df["area_type"] = clean_df["area"].apply(lambda x: "Urban" if x == 1 else "Rural")
+        clean_df["area_type"] = clean_df["area"].apply(
+            lambda x: "Urban" if x == 1 else "Rural"
+        )
 
         fig = px.box(
             clean_df,
@@ -139,4 +147,3 @@ def bivariate_analysis(df: pd.DataFrame) -> None:
         )
         fig.update_layout(template="plotly_white", title_font_color=colors[3])
         st.plotly_chart(fig, use_container_width=True)
-

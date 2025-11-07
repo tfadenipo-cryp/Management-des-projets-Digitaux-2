@@ -6,7 +6,9 @@ def search_by_power(df: pd.DataFrame) -> None:
     """Displays the average claim cost by vehicle power."""
 
     st.subheader("Claim Cost by Vehicle Power")
-    st.markdown("This section displays the **average annual claim cost** depending on the vehicle's horsepower.")
+    st.markdown(
+        "This section displays the **average annual claim cost** depending on the vehicle's horsepower."
+    )
 
     required_cols = ["power", "cost_claims_year"]
     if not all(col in df.columns for col in required_cols):
@@ -40,4 +42,3 @@ def search_by_power(df: pd.DataFrame) -> None:
         - **Number of records:** {len(filtered_df)}
         """
     )
-

@@ -2,6 +2,7 @@
 Main Dashboard Router
 Handles navigation between Client and Insurer sections.
 """
+
 from __future__ import annotations
 
 import sys
@@ -43,8 +44,8 @@ def show_home_page() -> None:
     st.markdown(
         textwrap.dedent("""
         <p style="text-align: justify;">
-        This interactive platform is developed as part of the <b>Digital Project Management 2 (MPD2)</b> course. 
-        It provides an environment to explore and analyze a dataset 
+        This interactive platform is developed as part of the <b>Digital Project Management 2 (MPD2)</b> course.
+        It provides an environment to explore and analyze a dataset
         on motor vehicle insurance.
         </p>
         <p>
@@ -53,26 +54,25 @@ def show_home_page() -> None:
         """),
         unsafe_allow_html=True,
     )
-    
+
     st.divider()
-    
+
     col1, col2 = st.columns(2)
-    
+
     with col1:
         st.subheader("Client Area")
         st.markdown("Estimate your insurance premium and explore public data.")
         if st.button("Go to Client Area"):
             st.session_state.page = "client"
             st.rerun()
-            
+
     with col2:
         st.subheader("Insurer Area")
         st.markdown("Access risk analysis and cost prediction tools.")
         if st.button("Go to Insurer Area"):
             # Use 'insurer' for session state consistency
-            st.session_state.page = "insurer" 
+            st.session_state.page = "insurer"
             st.rerun()
-
 
 
 def show_client_page(df: pd.DataFrame) -> None:
@@ -82,9 +82,9 @@ def show_client_page(df: pd.DataFrame) -> None:
     if st.button("⬅️ Home"):
         st.session_state.page = "home"
         st.rerun()
-        
+
     st.title("Client Area")
-    
+
     menu = st.selectbox(
         "Choose an analysis:",
         [
@@ -96,7 +96,7 @@ def show_client_page(df: pd.DataFrame) -> None:
             "Risk Analysis (by Type and Power)",
         ],
     )
-    
+
     st.divider()
 
     # Router for Client page
@@ -122,7 +122,7 @@ def show_insurer_page(df: pd.DataFrame) -> None:
     if st.button("⬅️ Home"):
         st.session_state.page = "home"
         st.rerun()
-        
+
     st.title("Insurer Area")
 
     # --- CORRECTION: Menu text updated ---
@@ -133,11 +133,11 @@ def show_insurer_page(df: pd.DataFrame) -> None:
             # "Other analysis (coming soon)..."
         ],
     )
-    
+
     st.divider()
-    
+
     if menu == "Risk Predictor (Probability)":
-        cost_predictor() # The function is still called cost_predictor
+        cost_predictor()  # The function is still called cost_predictor
     # elif menu == "Other analysis (coming soon)...":
     #    st.info("Coming soon.")
 
@@ -146,7 +146,7 @@ def main() -> None:
     """Main Streamlit app router."""
 
     st.set_page_config(page_title="Insurance Dashboard", layout="wide")
-    
+
     # Initialize session state
     if "page" not in st.session_state:
         st.session_state.page = "home"
@@ -156,18 +156,19 @@ def main() -> None:
     if df is None or df.empty:
         st.error("⚠️ Could not load the dataset.")
         st.stop()
-    
+
     # --- Page Router ---
     if st.session_state.page == "home":
         show_home_page()
     elif st.session_state.page == "client":
         show_client_page(df)
-    elif st.session_state.page == "insurer": # Changed from 'decideur'
-        show_insurer_page(df) # Call the renamed function
+    elif st.session_state.page == "insurer":  # Changed from 'decideur'
+        show_insurer_page(df)  # Call the renamed function
     else:
         # Default fallback to home
         st.session_state.page = "home"
         st.rerun()
+
 
 if __name__ == "__main__":
     main()

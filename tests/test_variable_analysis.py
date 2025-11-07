@@ -8,15 +8,12 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import variable_analysis # noqa: E402
+from functions import variable_analysis  # noqa: E402
 
 
 @pytest.fixture
 def mock_df():
-    return pd.DataFrame({
-        "power": [50, 100, 150],
-        "premium": [200, 300, 400]
-    })
+    return pd.DataFrame({"power": [50, 100, 150], "premium": [200, 300, 400]})
 
 
 def test_variable_analysis_executes(monkeypatch, mock_df):
@@ -27,4 +24,3 @@ def test_variable_analysis_executes(monkeypatch, mock_df):
         variable_analysis(mock_df)
     except Exception as e:
         pytest.fail(f"variable_analysis raised an exception: {e}")
-

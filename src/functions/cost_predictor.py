@@ -2,13 +2,12 @@
 Streamlit Page: Probability Predictor (for Insurer)
 (Filename cost_predictor.py is kept for import compatibility)
 """
+
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import joblib  # type: ignore
-import numpy as np
 import pandas as pd
 import statsmodels.api as sm  # type: ignore
 import streamlit as st
@@ -100,7 +99,10 @@ def cost_predictor() -> None:
                 "Vehicle Type",
                 [1, 2, 3, 4],
                 format_func=lambda x: {
-                    1: "Motorcycle", 2: "Van", 3: "Car", 4: "Agricultural"
+                    1: "Motorcycle",
+                    2: "Van",
+                    3: "Car",
+                    4: "Agricultural",
                 }[x],
             )
         with col2:
@@ -117,11 +119,19 @@ def cost_predictor() -> None:
         with col3:
             driver_age = st.slider("Driver Age", 18, 90, 35)
             driving_experience = st.slider("Years of Experience", 0, 72, 15)
-            area = st.radio("Area", [0, 1], format_func=lambda x: {0: "Rural", 1: "Urban"}[x])
+            area = st.radio(
+                "Area", [0, 1], format_func=lambda x: {0: "Rural", 1: "Urban"}[x]
+            )
         with col4:
             seniority = st.slider("Seniority (years)", 0, 50, 3)
-            lapse = st.radio("Contract previously terminated?", [0, 1], format_func=lambda x: {0: "No", 1: "Yes"}[x])
-            second_driver = st.radio("Second driver?", [0, 1], format_func=lambda x: {0: "No", 1: "Yes"}[x])
+            lapse = st.radio(
+                "Contract previously terminated?",
+                [0, 1],
+                format_func=lambda x: {0: "No", 1: "Yes"}[x],
+            )
+            second_driver = st.radio(
+                "Second driver?", [0, 1], format_func=lambda x: {0: "No", 1: "Yes"}[x]
+            )
 
         submit = st.form_submit_button("Estimate Risk Probability")
 
@@ -130,36 +140,38 @@ def cost_predictor() -> None:
 
     # --- Build Input DataFrame ---
     # These values are placeholders for features not in the form
-    df = pd.DataFrame({
-        "value_vehicle": [value_vehicle],
-        "vehicle_age": [vehicle_age],
-        "type_risk": [type_risk],
-        "power": [power],
-        "type_fuel": [type_fuel],
-        "n_doors": [n_doors],
-        "driver_age": [driver_age],
-        "driving_experience": [driving_experience],
-        "area": [area],
-        "seniority": [seniority],
-        "lapse": [lapse],
-        "second_driver": [second_driver],
-        "policies_in_force": [1], # Placeholder
-        "max_policies": [1],      # Placeholder
-        "max_products": [1],      # Placeholder
-        "cylinder_capacity": [1600], # Placeholder
-        "length": [4.5],          # Placeholder
-        "weight": [1300],         # Placeholder
-        "distribution_channel": [0], # Placeholder
-        "payment": [0],           # Placeholder
-    })
+    df = pd.DataFrame(
+        {
+            "value_vehicle": [value_vehicle],
+            "vehicle_age": [vehicle_age],
+            "type_risk": [type_risk],
+            "power": [power],
+            "type_fuel": [type_fuel],
+            "n_doors": [n_doors],
+            "driver_age": [driver_age],
+            "driving_experience": [driving_experience],
+            "area": [area],
+            "seniority": [seniority],
+            "lapse": [lapse],
+            "second_driver": [second_driver],
+            "policies_in_force": [1],  # Placeholder
+            "max_policies": [1],  # Placeholder
+            "max_products": [1],  # Placeholder
+            "cylinder_capacity": [1600],  # Placeholder
+            "length": [4.5],  # Placeholder
+            "weight": [1300],  # Placeholder
+            "distribution_channel": [0],  # Placeholder
+            "payment": [0],  # Placeholder
+        }
+    )
 
     # --- Preprocess ---
     X_processed = preprocessor.transform(df)
 
     num_features = preprocessor.named_transformers_["num"].feature_names_in_
-    cat_features = (
-        preprocessor.named_transformers_["cat"]["onehot"].get_feature_names_out()
-    )
+    cat_features = preprocessor.named_transformers_["cat"][
+        "onehot"
+    ].get_feature_names_out()
     all_processed_features = list(num_features) + list(cat_features)
 
     X_df = pd.DataFrame(X_processed, columns=all_processed_features)
@@ -167,7 +179,7 @@ def cost_predictor() -> None:
 
     # Align columns with the model's expected features
     X_final = pd.DataFrame(columns=expected_features, index=[0]).fillna(0.0)
-    
+
     for col in X_final.columns:
         if col in X_df_sm.columns:
             X_final[col] = X_df_sm[col].values
@@ -178,7 +190,7 @@ def cost_predictor() -> None:
         prob_percent = probability[0] * 100
 
         st.success(f"## ✅ Claim Probability: {prob_percent:,.1f} %")
-        
+
         if prob_percent < 15:
             st.info("Low Risk")
         elif prob_percent < 30:

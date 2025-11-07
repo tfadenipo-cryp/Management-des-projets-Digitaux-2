@@ -9,13 +9,13 @@ This script:
 5.  Makes predictions on the Test set.
 6.  Calculates and prints the RMSE and R-squared on unseen data.
 """
+
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 import statsmodels.api as sm  # type: ignore
 from sklearn.metrics import mean_squared_error, r2_score  # type: ignore
 
@@ -31,19 +31,26 @@ try:
         preprocess_data_for_modeling,
     )
 except ImportError as e:
-    print(
-        f"Error: Could not import necessary modules. {e}"
-    )
+    print(f"Error: Could not import necessary modules. {e}")
     sys.exit(1)
 
 # --- CORRECTION : Ajout des features de risque ---
 FINAL_FEATURES = [
-    "vehicle_age", "value_vehicle", "payment_0",
-    "second_driver_0", "driving_experience", "type_fuel_0",
-    "policies_in_force", "lapse", "area_0", "seniority",
+    "vehicle_age",
+    "value_vehicle",
+    "payment_0",
+    "second_driver_0",
+    "driving_experience",
+    "type_fuel_0",
+    "policies_in_force",
+    "lapse",
+    "area_0",
+    "seniority",
     "distribution_channel_0",
-    "n_claims_history", "r_claims_history"  # <-- LES AJOUTS IMPORTANTS
+    "n_claims_history",
+    "r_claims_history",  # <-- LES AJOUTS IMPORTANTS
 ]
+
 
 def evaluate_model() -> None:
     """
@@ -90,7 +97,7 @@ def evaluate_model() -> None:
 
     X_train_final = X_train[FINAL_FEATURES]
     X_test_final = X_test[FINAL_FEATURES]
-    
+
     X_train_with_const = sm.add_constant(X_train_final, prepend=True)
     X_test_with_const = sm.add_constant(X_test_final, prepend=True)
 
@@ -106,7 +113,9 @@ def evaluate_model() -> None:
     print("✅ Model training complete.")
 
     # 5. Make predictions ON TEST DATA
-    print(f"\nStep 5: Making predictions on {len(X_test_with_const)} unseen test rows...")
+    print(
+        f"\nStep 5: Making predictions on {len(X_test_with_const)} unseen test rows..."
+    )
     # .predict() applique automatiquement l'exponentielle (l'inverse du log)
     y_pred = results.predict(X_test_with_const)
 

@@ -6,8 +6,8 @@ from .variable_analysis import variable_analysis
 from .bivariate_analysis import bivariate_analysis
 from .main_dashboard import main as main_dashboard
 
-from . import premium_predictor as premium_predictor_module   # module
-from .premium_predictor import premium_predictor              # fonction
+from . import premium_predictor as premium_predictor_module  # module
+from .premium_predictor import premium_predictor  # fonction
 
 __all__ = [
     "load_data",
@@ -20,5 +20,3 @@ __all__ = [
     "premium_predictor_module",
     "premium_predictor",
 ]
-
-

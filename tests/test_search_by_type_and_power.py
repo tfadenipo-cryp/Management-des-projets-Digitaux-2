@@ -8,16 +8,18 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
 
-from functions import search_by_type_and_power # noqa: E402
+from functions import search_by_type_and_power  # noqa: E402
 
 
 @pytest.fixture
 def sample_df():
-    return pd.DataFrame({
-        "type_risk": [1, 2, 3],
-        "power": [100, 100, 200],
-        "cost_claims_year": [250, 300, 400]
-    })
+    return pd.DataFrame(
+        {
+            "type_risk": [1, 2, 3],
+            "power": [100, 100, 200],
+            "cost_claims_year": [250, 300, 400],
+        }
+    )
 
 
 def test_search_by_type_and_power_executes(monkeypatch, sample_df):
@@ -28,4 +30,3 @@ def test_search_by_type_and_power_executes(monkeypatch, sample_df):
         search_by_type_and_power(sample_df)
     except Exception as e:
         pytest.fail(f"search_by_type_and_power raised an exception: {e}")
-

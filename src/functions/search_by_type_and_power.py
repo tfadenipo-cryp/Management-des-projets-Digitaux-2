@@ -6,7 +6,9 @@ def search_by_type_and_power(df: pd.DataFrame) -> None:
     """Displays the average claim cost by both vehicle type and power."""
 
     st.subheader("Claim Cost by Vehicle Type and Power")
-    st.markdown("This section combines **vehicle type** and **power** to analyze claim cost variations.")
+    st.markdown(
+        "This section combines **vehicle type** and **power** to analyze claim cost variations."
+    )
 
     required_cols = ["type_risk", "power", "cost_claims_year"]
     if not all(col in df.columns for col in required_cols):
@@ -32,15 +34,21 @@ def search_by_type_and_power(df: pd.DataFrame) -> None:
 
     df["vehicle_type"] = df["type_risk"].map(vehicle_type_map)
 
-    selected_type = st.selectbox("Select a vehicle type:", sorted(df["vehicle_type"].dropna().unique()))
+    selected_type = st.selectbox(
+        "Select a vehicle type:", sorted(df["vehicle_type"].dropna().unique())
+    )
 
     # Ensure power list has integers only
-    available_powers = sorted(df[df["vehicle_type"] == selected_type]["power"].dropna().unique())
+    available_powers = sorted(
+        df[df["vehicle_type"] == selected_type]["power"].dropna().unique()
+    )
     power_list = [int(p) for p in available_powers if not pd.isna(p)]
 
     selected_power = st.selectbox("Select a vehicle power (HP):", power_list)
 
-    filtered_df = df[(df["vehicle_type"] == selected_type) & (df["power"] == selected_power)]
+    filtered_df = df[
+        (df["vehicle_type"] == selected_type) & (df["power"] == selected_power)
+    ]
 
     if filtered_df.empty:
         st.warning("No available records for this combination.")

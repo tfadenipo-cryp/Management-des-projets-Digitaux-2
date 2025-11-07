@@ -1,13 +1,16 @@
 import pandas as pd
 from functions import load_data  # ✅ imported from src/functions/__init__.py
 
+
 def test_load_data_returns_dataframe():
     """Test that load_data loads the dataset correctly and returns a valid DataFrame."""
-    
+
     df = load_data()
 
     # Basic type check
-    assert isinstance(df, pd.DataFrame), "❌ load_data() should return a pandas DataFrame."
+    assert isinstance(
+        df, pd.DataFrame
+    ), "❌ load_data() should return a pandas DataFrame."
 
     # DataFrame not empty
     assert not df.empty, (
@@ -26,4 +29,6 @@ def test_load_data_returns_dataframe():
     numeric_cols = ["premium", "cost_claims_year", "value_vehicle"]
     for col in numeric_cols:
         if col in df.columns:
-            assert pd.api.types.is_numeric_dtype(df[col]), f"⚠️ Column '{col}' should be numeric."
+            assert pd.api.types.is_numeric_dtype(
+                df[col]
+            ), f"⚠️ Column '{col}' should be numeric."

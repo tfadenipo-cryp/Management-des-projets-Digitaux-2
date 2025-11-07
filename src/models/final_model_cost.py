@@ -8,6 +8,7 @@ This script:
 4.  Trains the final GLM Binomial (Logistic Regression) model on ALL data.
 5.  Saves the fitted preprocessor and the trained model to disk.
 """
+
 from __future__ import annotations
 
 import sys
@@ -29,17 +30,25 @@ try:
         preprocess_data_for_modeling,
     )
 except ImportError as e:
-    print(
-        f"Error: Could not import necessary modules. {e}"
-    )
+    print(f"Error: Could not import necessary modules. {e}")
     sys.exit(1)
 
 # Les 14 features stables du modèle Premium
 FINAL_FEATURES = [
-    'n_doors_0', 'vehicle_age', 'value_vehicle', 'payment_0', 'type_risk_4',
-    'second_driver_0', 'driving_experience', 'type_fuel_0',
-    'policies_in_force', 'lapse', 'area_0', 'seniority',
-    'distribution_channel_0', 'type_risk_1'
+    "n_doors_0",
+    "vehicle_age",
+    "value_vehicle",
+    "payment_0",
+    "type_risk_4",
+    "second_driver_0",
+    "driving_experience",
+    "type_fuel_0",
+    "policies_in_force",
+    "lapse",
+    "area_0",
+    "seniority",
+    "distribution_channel_0",
+    "type_risk_1",
 ]
 
 # Path for saved models (Nous écrasons les anciens fichiers 'cost')
@@ -63,21 +72,20 @@ def train_and_save_probability_model() -> None:
 
     # 2. CRÉER LA CIBLE (y) ET NETTOYER LES FEATURES
     print("Step 2: Creating target 'had_claim' and removing leaks...")
-    base_df['had_claim'] = (base_df['n_claims_year'] > 0).astype(int)
-    
+    base_df["had_claim"] = (base_df["n_claims_year"] > 0).astype(int)
+
     # --- CORRECTION DÉFINITIVE ---
     # Nous enlevons les "fuites de données" AVANT d'appeler le préprocesseur.
     # Le préprocesseur ne doit jamais voir les colonnes que l'utilisateur ne peut pas fournir.
     cols_to_remove_manually = [
-        'n_claims_history', 
-        'r_claims_history', 
-        'cost_claims_year', 
-        'n_claims_year',
-        'premium' # Le premium n'est pas une feature
+        "n_claims_history",
+        "r_claims_history",
+        "cost_claims_year",
+        "n_claims_year",
+        "premium",  # Le premium n'est pas une feature
     ]
-    base_df_cleaned = base_df.drop(columns=cols_to_remove_manually, errors='ignore')
+    base_df_cleaned = base_df.drop(columns=cols_to_remove_manually, errors="ignore")
     # --- FIN DE LA CORRECTION ---
-
 
     # 3. Preprocess 100% of data
     print("Step 3: Preprocessing 100% of data...")

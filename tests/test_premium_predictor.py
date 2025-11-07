@@ -34,9 +34,9 @@ def test_premium_predictor_executes(monkeypatch):
     monkeypatch.setattr(
         "functions.premium_predictor.load_premium_models",
         # Mock pour renvoyer les 3 objets (preprocessor, model, features)
-        lambda: (DummyPreprocessor(), DummyModel(), ["const", "num_feature"])
+        lambda: (DummyPreprocessor(), DummyModel(), ["const", "num_feature"]),
     )
-    
+
     # Suppression des mocks inutiles qui cassaient
     # monkeypatch.setattr(
     #     "functions.premium_predictor_module.sm.load",
@@ -54,13 +54,17 @@ def test_premium_predictor_executes(monkeypatch):
 
 
 class DummyCtx:
-    def __enter__(self): return self
-    def __exit__(self, *args): return False
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return False
 
 
 class DummyPreprocessor:
     def transform(self, df):
         import numpy as np
+
         return np.zeros((len(df), 1))
 
     @property
@@ -69,11 +73,14 @@ class DummyPreprocessor:
             @property
             def feature_names_in_(self):
                 return ["num_feature"]
+
         class Cat:
             def __getitem__(self, key):
                 return self
+
             def get_feature_names_out(self):
                 return []
+
         return {"num": Num(), "cat": Cat()}
 
 
@@ -83,9 +90,11 @@ class DummyModel:
 
 
 class DummyFeaturesFile:
-    def __enter__(self): 
+    def __enter__(self):
         from io import StringIO
+
         self.buf = StringIO('["const","num_feature"]')
         return self.buf
-    def __exit__(self, *a): 
+
+    def __exit__(self, *a):
         self.buf.close()

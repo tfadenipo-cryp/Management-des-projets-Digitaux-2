@@ -8,6 +8,7 @@ This script:
 4. Trains the final GLM model on ALL data.
 5. Saves the fitted preprocessor, model, and model feature list to disk.
 """
+
 import pandas as pd
 import statsmodels.api as sm
 import sys
@@ -23,16 +24,28 @@ try:
     from src.functions.engineering import engineering
     from src.models.preprocessing import preprocess_data_for_modeling
 except ImportError as e:
-    print("Error: Could not import necessary modules. Make sure all __init__.py files are present.")
+    print(
+        "Error: Could not import necessary modules. Make sure all __init__.py files are present."
+    )
     print(f"Details: {e}")
     sys.exit(1)
 
 # 14 WINNING FEATURES FROM THE BIC ANALYSIS
 FINAL_FEATURES = [
-    'n_doors_0', 'vehicle_age', 'value_vehicle', 'payment_0', 'type_risk_4',
-    'second_driver_0', 'driving_experience', 'type_fuel_0',
-    'policies_in_force', 'lapse', 'area_0', 'seniority',
-    'distribution_channel_0', 'type_risk_1'
+    "n_doors_0",
+    "vehicle_age",
+    "value_vehicle",
+    "payment_0",
+    "type_risk_4",
+    "second_driver_0",
+    "driving_experience",
+    "type_fuel_0",
+    "policies_in_force",
+    "lapse",
+    "area_0",
+    "seniority",
+    "distribution_channel_0",
+    "type_risk_1",
 ]
 
 # Path for saved models
@@ -52,8 +65,8 @@ def train_and_save_model():
         return
 
     print("Step 2: Preprocessing 100% of data...")
-    X_train, X_test, y_train, y_test, preprocessor, all_features = preprocess_data_for_modeling(
-        base_df, target_column='premium', test_size=0.01
+    X_train, X_test, y_train, y_test, preprocessor, all_features = (
+        preprocess_data_for_modeling(base_df, target_column="premium", test_size=0.01)
     )
 
     if X_train is None or X_train.empty:
@@ -81,9 +94,7 @@ def train_and_save_model():
     # Final GLM
     print(f"Step 4: Training final GLM (Gamma) model on {len(X_final)} rows...")
     final_model = sm.GLM(
-        y_full,
-        X_final_const,
-        family=sm.families.Gamma(link=sm.families.links.log())
+        y_full, X_final_const, family=sm.families.Gamma(link=sm.families.links.log())
     )
     final_model_results = final_model.fit()
 
