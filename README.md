@@ -101,7 +101,7 @@ Published on July 30, 2024, by Josep Lledo and Jose M. Pavià.
 
 ## Flowchart
 
-![Flow](docs/flow.jpeg)
+![Flow](docs/flow.png)
 
 ## Project Structure
 
