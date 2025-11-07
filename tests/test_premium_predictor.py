@@ -5,22 +5,11 @@ without raising, by mocking Streamlit widgets and the model loader.
 Comments and docstrings are in English and follow standard Python style.
 """
 
-from __future__ import annotations  # future-proof typing  # noqa: INP001
-
-import sys
-from pathlib import Path
+from __future__ import annotations
+from src.functions.premium_predictor import premium_predictor
 
 import pytest
 import streamlit as st
-
-# --- Ensure src/ is importable BEFORE importing the app ----------------------
-ROOT_DIR = Path(__file__).resolve().parents[1]  # project root  # noqa: N816
-SRC_DIR = ROOT_DIR / "src"  # src directory  # noqa: N816
-if str(SRC_DIR) not in sys.path:
-    sys.path.append(str(SRC_DIR))  # add src to sys.path  # noqa: E402
-
-# Import after sys.path update (ruff E402 compliant)  # noqa: E402
-from src.functions.premium_predictor import premium_predictor  # type: ignore  # noqa: E402
 
 
 def test_premium_predictor_executes(monkeypatch: pytest.MonkeyPatch) -> None:

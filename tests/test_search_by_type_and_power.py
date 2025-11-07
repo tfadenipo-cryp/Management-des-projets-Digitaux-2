@@ -1,18 +1,22 @@
-import sys
-from pathlib import Path
+"""Tests for the `search_by_type_and_power` Streamlit component.
+
+This module provides a smoke test ensuring the function executes without
+raising by mocking Streamlit interactions. Comments/docstrings are in English
+and follow standard Python conventions.
+"""
+
+from __future__ import annotations
+
 import pandas as pd
 import pytest
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
-SRC_DIR = ROOT_DIR / "src"
-if str(SRC_DIR) not in sys.path:
-    sys.path.append(str(SRC_DIR))
-
-from functions import search_by_type_and_power  # noqa: E402
+# Import directly from package (no sys.path modifications)
+from src.functions.search_by_type_and_power import search_by_type_and_power
 
 
 @pytest.fixture
-def sample_df():
+def sample_df() -> pd.DataFrame:
+    """Return a minimal DataFrame for the component under test."""
     return pd.DataFrame(
         {
             "type_risk": [1, 2, 3],
@@ -22,11 +26,21 @@ def sample_df():
     )
 
 
-def test_search_by_type_and_power_executes(monkeypatch, sample_df):
-    """Ensure search_by_type_and_power executes correctly."""
-    monkeypatch.setattr("streamlit.selectbox", lambda label, options: options[0])
-    monkeypatch.setattr("streamlit.write", lambda *args, **kwargs: None)
+def test_search_by_type_and_power_executes(
+    monkeypatch: pytest.MonkeyPatch, sample_df: pd.DataFrame
+) -> None:
+    """Smoke test: ensure `search_by_type_and_power` executes without errors.
+
+    We patch Streamlit primitives used by the component to avoid UI side effects.
+    """
+
+    # Widgets / outputs (safe no-ops)
+    monkeypatch.setattr("streamlit.selectbox", lambda *a, **k: 1)
+    monkeypatch.setattr("streamlit.write", lambda *a, **k: None)
+    monkeypatch.setattr("streamlit.markdown", lambda *a, **k: None, raising=False)
+    monkeypatch.setattr("streamlit.warning", lambda *a, **k: None, raising=False)
+
     try:
-        search_by_type_and_power(sample_df)
-    except Exception as e:
-        pytest.fail(f"search_by_type_and_power raised an exception: {e}")
+        search_by_type_and_power(sample_df)  # execute
+    except Exception as exc:  # pragma: no cover - should not trigger
+        pytest.fail(f"search_by_type_and_power raised an exception: {exc}")
