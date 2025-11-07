@@ -6,7 +6,7 @@ Comments and docstrings are in English and follow standard Python style.
 """
 
 from __future__ import annotations
-from src.functions.premium_predictor import premium_predictor
+from src.functions.premium_predictor import premium_predictor as premium_predictor
 
 import pytest
 import streamlit as st
