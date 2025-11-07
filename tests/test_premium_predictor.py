@@ -2,16 +2,12 @@ import sys
 from pathlib import Path
 import pytest
 import streamlit as st
+from src.functions.premium_predictor import premium_predictor
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.append(str(SRC_DIR))
-
-# --- CORRECTION ---
-# Importer la fonction DEPUIS son fichier
-from functions.premium_predictor import premium_predictor  # noqa: E402
-# --- FIN CORRECTION ---
 
 
 def test_premium_predictor_executes(monkeypatch):
