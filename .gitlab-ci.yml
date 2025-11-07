@@ -55,5 +55,5 @@ security-audit:
     - python -m pip install uv pip-audit
   script:
     # Génère un requirements.txt standard dans le dossier temporaire
-    - python -m pip freeze > $env:TEMP\req.txt
-    - python -m pip_audit -r $env:TEMP\req.txt
+    - python -m pip freeze >
+    - python -m pip_audit -r
