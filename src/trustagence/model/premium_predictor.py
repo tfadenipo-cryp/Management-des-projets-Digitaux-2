@@ -7,9 +7,12 @@ import pandas as pd
 import statsmodels.api as sm  # type: ignore
 import streamlit as st
 
+
 # --- Define paths ---
-ROOT_DIR = Path(__file__).resolve().parents[3]
-MODELS_DIR = ROOT_DIR / "models"
+HERE = Path(__file__).resolve()
+ROOT_DIR = HERE.parents[3]
+MODELS_DIR = ROOT_DIR / "src" / "trustagence" / "models_docs"
+SRC_DIR = ROOT_DIR / "src"
 PREPROCESSOR_PATH = MODELS_DIR / "premium_preprocessor.joblib"
 MODEL_PATH = MODELS_DIR / "premium_model.pkl"
 FEATURES_PATH = MODELS_DIR / "premium_model_features.json"

@@ -20,7 +20,7 @@ import statsmodels.api as sm  # type: ignore
 from sklearn.metrics import mean_squared_error, r2_score  # type: ignore
 
 # --- Add Project Root to sys.path ---
-ROOT_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(__file__).resolve().parents[3]
 if str(ROOT_DIR) not in sys.path:
     sys.path.append(str(ROOT_DIR))
 # --- End of sys.path modification ---

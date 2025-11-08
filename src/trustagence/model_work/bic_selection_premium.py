@@ -20,7 +20,7 @@ except ImportError:
     sys.exit(1)
 
 # --- Add Project Root to sys.path to allow for src imports ---
-ROOT_DIR = str(Path(__file__).resolve().parents[2])
+ROOT_DIR = str(Path(__file__).resolve().parents[3])
 if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 # --- End of sys.path modification ---

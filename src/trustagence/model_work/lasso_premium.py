@@ -21,13 +21,13 @@ from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LassoCV, lasso_path
 
-ROOT_DIR = str(Path(__file__).resolve().parents[2])
+ROOT_DIR = str(Path(__file__).resolve().parents[3])
 if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 
 try:
-    from src.functions.engineering import engineering
-    from src.models.preprocessing import preprocess_data_for_modeling
+    from trustagence.engineering.engineering import engineering
+    from trustagence.model_work.preprocessing import preprocess_data_for_modeling
 except ImportError as e:
     print(f"❌ Import error : {e}")
     sys.exit(1)

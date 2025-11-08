@@ -22,7 +22,7 @@ except ImportError:
     sys.exit(1)
 
 
-ROOT_DIR = str(Path(__file__).resolve().parents[2])
+ROOT_DIR = str(Path(__file__).resolve().parents[3])
 if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 

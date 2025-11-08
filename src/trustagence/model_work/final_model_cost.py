@@ -19,14 +19,14 @@ import pandas as pd
 import statsmodels.api as sm  # type: ignore
 
 # --- Add Project Root to sys.path ---
-ROOT_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(__file__).resolve().parents[3]
 if str(ROOT_DIR) not in sys.path:
     sys.path.append(str(ROOT_DIR))
 # --- End of sys.path modification ---
 
 try:
-    from src.functions.engineering import engineering
-    from src.models.preprocessing_premium import (
+    from trustagence.engineering.engineering import engineering
+    from trustagence.model_work.preprocessing_premium import (
         preprocess_data_for_modeling,
     )
 except ImportError as e:
