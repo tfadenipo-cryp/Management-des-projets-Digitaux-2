@@ -1,8 +1,20 @@
 stages:
+  - check
   - lint
   - typecheck
   - audit
   - test
+
+
+check-python:
+  stage: check
+  script:
+    - echo "=== WHERE PYTHON ==="
+    - where python
+    - echo "=== VERSION ==="
+    - python --version
+
+
 
 # Lint
 lint:
