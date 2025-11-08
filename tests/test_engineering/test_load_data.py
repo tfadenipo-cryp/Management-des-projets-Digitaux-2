@@ -8,7 +8,7 @@ It follows PEP 8 and PEP 257 conventions.
 from __future__ import annotations
 
 import pandas as pd
-from src.trustagence.engineering import load_data
+from src.trustagence.engineering.load_data import load_data
 
 
 def test_load_data_returns_dataframe() -> None:
