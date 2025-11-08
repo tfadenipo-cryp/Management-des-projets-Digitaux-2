@@ -4,86 +4,47 @@ stages:
   - audit
   - test
 
-variables:
-  PYTHONUTF8: "1"
-
-# --- helper: vérif Python 3.13 dispo ---
-# (On l’écrit inline dans chaque job pour rester simple.)
-#   - Vérifie que "python" existe
-#   - Vérifie que la version est 3.13
-#   - Installe uv
-#   - uv sync
-
-# --- Lint ---
+# Lint
 lint:
   stage: lint
   before_script:
-    - |
-      if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
-        Write-Error "'python' introuvable dans le PATH du runner."; exit 1
-      }
-      $v = (& python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')").Trim()
-      if ($v -ne "3.13") {
-        Write-Error "Python 3.13 requis, détecté $v. Installe 3.13 sur cette machine."; exit 1
-      }
-      python -m pip install -U uv
-      python -m uv sync --frozen
+    - python --version
+    - python -m pip install -U uv
+    - python -m uv sync --frozen
   script:
     - python -m uv run ruff check . --fix
     - python -m uv run ruff check .
 
-# --- Type checking ---
+# Type checking
 typecheck:
   stage: typecheck
   before_script:
-    - |
-      if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
-        Write-Error "'python' introuvable dans le PATH du runner."; exit 1
-      }
-      $v = (& python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')").Trim()
-      if ($v -ne "3.13") {
-        Write-Error "Python 3.13 requis, détecté $v. Installe 3.13 sur cette machine."; exit 1
-      }
-      python -m pip install -U uv
-      python -m uv sync --frozen
+    - python -m pip install -U uv
+    - python -m uv sync --frozen
   script:
     - python -m uv run mypy src --ignore-missing-imports
 
-# --- Tests unitaires ---
+# Tests unitaires
 pytest:
   stage: test
   variables:
+    # Mets "src" si tes imports sont du style "from trustagence import ...",
+    # sinon garde "src/trustagence" si c'est vraiment nécessaire.
     PYTHONPATH: "$CI_PROJECT_DIR/src"
   before_script:
-    - |
-      if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
-        Write-Error "'python' introuvable dans le PATH du runner."; exit 1
-      }
-      $v = (& python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')").Trim()
-      if ($v -ne "3.13") {
-        Write-Error "Python 3.13 requis, détecté $v. Installe 3.13 sur cette machine."; exit 1
-      }
-      python -m pip install -U uv
-      python -m uv sync --frozen
-      # (si pytest n'est pas dans ton pyproject, le forcer:)
-      python -m uv run python -m pip install -U pytest
+    - python -m pip install -U uv
+    - python -m uv sync --frozen
+    # (optionnel) au cas où pytest n'est pas dans [tool.uv] dev-dependencies
+    - python -m uv run python -m pip install -U pytest
   script:
     - python -m uv run pytest tests/ --maxfail=1 --disable-warnings -v
 
-# --- Audit de sécurité (sans requirements.txt) ---
+# Audit de sécurité (sans requirements.txt)
 security-audit:
   stage: audit
   before_script:
-    - |
-      if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
-        Write-Error "'python' introuvable dans le PATH du runner."; exit 1
-      }
-      $v = (& python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')").Trim()
-      if ($v -ne "3.13") {
-        Write-Error "Python 3.13 requis, détecté $v. Installe 3.13 sur cette machine."; exit 1
-      }
-      python -m pip install -U uv
-      python -m uv sync --frozen
-      python -m uv run python -m pip install -U pip-audit
+    - python -m pip install -U uv
+    - python -m uv sync --frozen
+    - python -m uv run python -m pip install -U pip-audit
   script:
     - python -m uv run pip-audit
