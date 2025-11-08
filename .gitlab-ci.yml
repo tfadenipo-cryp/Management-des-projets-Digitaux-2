@@ -57,8 +57,7 @@ security-audit:
   before_script:
     - python -m pip install -U uv
     - python -m uv sync --frozen
-    # Corrige pip dans la venv gérée par uv avant l'audit
-    - python -m uv run python -m pip install -U pip==25.3
     - python -m uv run python -m pip install -U pip-audit
   script:
-    - python -m uv run pip-audit
+    # --fix tente la mise à jour des paquets vulnérables dans la venv
+    - python -m uv run pip-audit --fix
