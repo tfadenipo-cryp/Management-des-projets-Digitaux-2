@@ -27,8 +27,8 @@ if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 
 try:
-    from src.functions.engineering import engineering
-    from src.models.preprocessing import preprocess_data_for_modeling
+    from trustagence.engineering.engineering import engineering
+    from trustagence.model_work.preprocessing import preprocess_data_for_modeling
 except ImportError as e:
     print(
         "Error: Could not import necessary modules. Make sure all __init__.py files are present."

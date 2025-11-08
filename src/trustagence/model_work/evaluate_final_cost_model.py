@@ -26,8 +26,8 @@ if str(ROOT_DIR) not in sys.path:
 # --- End of sys.path modification ---
 
 try:
-    from src.functions.engineering import engineering
-    from src.models.preprocessing_premium import (
+    from trustagence.engineering.engineering import engineering
+    from trustagence.model_work.preprocessing_premium import (
         preprocess_data_for_modeling,
     )
 except ImportError as e:
