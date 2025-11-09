@@ -79,7 +79,7 @@ def show_client_page(df: pd.DataFrame) -> None:
         [
             "Premium Predictor",
             "Premium Analysis (Bivariate)",
-            "Variable Exploration",
+            "Variable Exploration: Univariate analysis",
             "Risk Analysis (by Power)",
             "Risk Analysis (by Type)",
             "Risk Analysis (by Type and Power)",
@@ -93,7 +93,7 @@ def show_client_page(df: pd.DataFrame) -> None:
         premium_predictor()
     elif menu == "Premium Analysis (Bivariate)":
         bivariate_analysis(df)
-    elif menu == "Variable Exploration":
+    elif menu == "Variable Exploration: Univariate analysis":
         variable_analysis(df)
     elif menu == "Risk Analysis (by Power)":
         search_by_power(df)
