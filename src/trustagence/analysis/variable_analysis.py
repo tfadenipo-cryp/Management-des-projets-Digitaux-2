@@ -43,7 +43,7 @@ def variable_analysis(df: pd.DataFrame) -> None:
             )
             st.plotly_chart(fig)
 
-        st.markdown("#### 2) Statistiques descriptives")
+        st.markdown("#### 2) Descriptive analysis")
         stats = df[get_name(variable)].describe().to_frame().T
         st.dataframe(stats.style.format("{:.2f}"))
 

@@ -10,7 +10,7 @@ def format_result_display(title: str, results: dict):
 
 def reright_of(variable):
     mapping = {
-        "id": "Unique contract or insured ID",
+        "id": "Insured ID",
         "date_start_contract": "Contract start date",
         "date_last_renewal": "Last contract renewal date",
         "date_next_renewal": "Next expected renewal date",
@@ -46,7 +46,7 @@ def reright_of(variable):
 
 def get_name(variable):
     mapping = {
-        "Unique contract or insured ID": "id",
+        "Insured ID": "id",
         "Contract start date": "date_start_contract",
         "Last contract renewal date": "date_last_renewal",
         "Next expected renewal date": "date_next_renewal",
