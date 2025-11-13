@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "pandas>=2.3.3",
-    "plotly>=6.3.1",
     "ruff>=0.14.1",
     "streamlit>=1.50.0",
     "scikit-learn",
@@ -17,6 +16,7 @@ dependencies = [
     "requests>=2.32.5",
     "pre-commit>=4.3.0",
     "matplotlib>=3.10.7",
+    "plotly>=6.4.0",
 ]
 
 [dependency-groups]
