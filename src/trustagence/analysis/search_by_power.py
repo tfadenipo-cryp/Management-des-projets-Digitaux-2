@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 
 def search_by_power(df: pd.DataFrame) -> None:
@@ -9,7 +10,23 @@ def search_by_power(df: pd.DataFrame) -> None:
     st.markdown(
         "This section displays the **average annual claim cost** depending on the vehicle's horsepower."
     )
+    st.markdown("#### 1. Global relation between claim cost and vehicle power")
 
+    df_filtred = df[df["cost_claims_year"] <= 80000]
+    fig = px.scatter(
+        df_filtred,
+        x="power",
+        y="cost_claims_year",
+        title="Prix moyen des sinistres par type de véhicule",
+        labels={
+            "vehicle_type": "Type de véhicule",
+            "claim_amount": "Montant moyen (€)",
+        },
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("#### 2. Selection of a precise power")
     required_cols = ["power", "cost_claims_year"]
     if not all(col in df.columns for col in required_cols):
         st.warning(f"Missing required columns: {required_cols}")

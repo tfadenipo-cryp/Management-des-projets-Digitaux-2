@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 
 def search_by_type_and_power(df: pd.DataFrame) -> None:
@@ -43,6 +44,23 @@ def search_by_type_and_power(df: pd.DataFrame) -> None:
         df[df["vehicle_type"] == selected_type]["power"].dropna().unique()
     )
     power_list = [int(p) for p in available_powers if not pd.isna(p)]
+
+    st.markdown(
+        f"#### Visualisation of the cost claim in function of the power but for only `{selected_type}`."
+    )
+    df_filtred = df[df["vehicle_type"] == selected_type]
+
+    fig = px.scatter(
+        df_filtred,
+        x="power",
+        y="cost_claims_year",
+        title="Prix moyen des sinistres par type de véhicule",
+        labels={
+            "vehicle_type": "Type de véhicule",
+            "claim_amount": "Montant moyen (€)",
+        },
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
     selected_power = st.selectbox("Select a vehicle power (HP):", power_list)
 
