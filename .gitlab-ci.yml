@@ -1,23 +1,8 @@
 stages:
-  - check
   - lint
   - typecheck
   - audit
   - test
-
-
-check-python:
-  stage: check
-  script:
-    - echo "=== WHERE PYTHON ==="
-    - |
-      if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
-        where python
-      else
-        which python
-      fi
-    - echo "=== VERSION ==="
-    - python --version
 
 
 # Lint
