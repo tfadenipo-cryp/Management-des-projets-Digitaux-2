@@ -10,10 +10,14 @@ check-python:
   stage: check
   script:
     - echo "=== WHERE PYTHON ==="
-    - where python
+    - |
+      if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+        where python
+      else
+        which python
+      fi
     - echo "=== VERSION ==="
     - python --version
-
 
 
 # Lint
